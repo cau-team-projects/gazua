@@ -12,22 +12,22 @@ class Gazua::CoinInfo {
 public:
     //ticker
     std::time_t timestamp; //최종 체결 시각
-    uint64_t last,         //최종 체결 가격
+    long double last,      //최종 체결 가격
             open,          //최근 24시간 시작 가격
             bid,           //매수호가
             ask,           //매도호가
             low,           //최근 24시간 체결 가격 중 최저가
-            high;          //최근 24시간 체결 가격 중 최고가
-    double volume;         //거래량
-    int64_t change;        //시작 가격 대비 현재가 차이
-    double changePercent;  //시작 가격 대비 현재가 차이 변화 비율
+            high,          //최근 24시간 체결 가격 중 최고가
+            volume,        //거래량
+            change,        //시작 가격 대비 현재가 차이
+            changePercent; //시작 가격 대비 현재가 차이 변화 비율
 
     //constraint
-    uint64_t tick_size,     //호가 단위
+    long double tick_size,  //호가 단위
             min_price,      //최소 주문가
-            max_price;      //최대 주문가
-    double order_min_size,  //매수/매도 수량 최소 입력값
-        order_min_size;     //매수/매도 수량 최대 입력값            
+            max_price,      //최대 주문가
+            order_min_size, //매수/매도 수량 최소 입력값
+            order_min_size; //매수/매도 수량 최대 입력값            
 };
 
 #endif
