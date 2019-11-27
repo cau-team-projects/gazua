@@ -6,6 +6,10 @@
 #include <optional>
 #include <vector>
 
+#include <QtNetwork>
+#include <QNetworkAccessManager>
+#include <QObject>
+
 #include "AmountType.h"
 #include "CoinInfo.h"
 #include "Order.h"
@@ -17,9 +21,19 @@ namespace Gazua {
     class API;
 };
 
-class Gazua::API {
+class Gazua::API : public QObject {
+    Q_OBJECT
 private:
-    std::optional<Token> token;
+    std::optional<Token> m_token;
+    QNetworkAccessManager m_qnam;
+    QNetworkReply* m_accessReply;
+    QNetworkReply* m_refreshReply;
+    QNetworkReply* m_refreshCoinInfosReply;
+    QNetworkReply* m_buyReply;
+    QNetworkReply* m_sellReply;
+    QNetworkReply* m_cancelReply;
+    QNetworkReply* m_getOrdersReply;
+
 public:
     explicit API();
     bool access(const std::string& key, const std::string& secret);
@@ -42,6 +56,9 @@ public:
 
     // GET https://api.korbit.co.kr/v1/user/orders
     bool getOrders(std::shared_ptr<std::map<uint64_t, Order>> orders, const std::string& coinName, const std::vector<uint64_t>& ids, uint64_t limit = 10);
+
+public slots:
+    void accessFinished();
 };
 
 #endif
