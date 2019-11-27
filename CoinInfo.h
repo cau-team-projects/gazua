@@ -27,7 +27,7 @@ public:
             min_price,      //최소 주문가
             max_price,      //최대 주문가
             order_min_size, //매수/매도 수량 최소 입력값
-            order_min_size; //매수/매도 수량 최대 입력값            
+            order_max_size; //매수/매도 수량 최대 입력값            
 };
 
 #endif

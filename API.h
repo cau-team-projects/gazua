@@ -1,8 +1,17 @@
 #ifndef API_H
 #define API_H
 
-#include <optional>
+#include <map>
 #include <memory>
+#include <optional>
+#include <vector>
+
+#include "AmountType.h"
+#include "CoinInfo.h"
+#include "Order.h"
+#include "OrderType.h"
+#include "Token.h"
+#include "UserInfo.h"
 
 namespace Gazua {
     class API;
@@ -12,6 +21,7 @@ class Gazua::API {
 private:
     std::optional<Token> token;
 public:
+    explicit API();
     bool access(const std::string& key, const std::string& secret);
     bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
@@ -31,5 +41,7 @@ public:
     bool cancel(const std::string& coinName, const std::vector<uint64_t>& ids);
 
     // GET https://api.korbit.co.kr/v1/user/orders
-    getOrders(std::shared_ptr<std::map<uint64_t, Order>> orders, const std::string& coinName, const std::vector<uint64_t>& ids, uint64_t limit = 10);
+    bool getOrders(std::shared_ptr<std::map<uint64_t, Order>> orders, const std::string& coinName, const std::vector<uint64_t>& ids, uint64_t limit = 10);
 };
+
+#endif

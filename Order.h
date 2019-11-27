@@ -7,21 +7,21 @@ namespace Gazua {
 
 class Gazua::Order {
 private:
-    std::string currency_pair,		// ÇØ´ç ÅëÈ­½Ö
-                side;				// ¸Å¼ö/¸Åµµ ±¸ºĞ (¸Å¼ö: bid, ¸Åµµ: ask)
-    uint64_t    avg_price,			// Ã¼°á °¡°İÀÇ °¡Áß Æò±ÕÄ¡
-                price;				// ÁÖ¹® ½Ã¿¡ ¼³Á¤ÇÑ ÁöÁ¤°¡, ±âº»°ªÀº 0 
-    long double order_amount,		// ÁÖ¹® ½Ã¿¡ ÁöÁ¤ÇÑ ÄÚÀÎÀÇ ¼ö·®
-                filled_amount,		// ÇöÀç±îÁö Ã¼°áµÈ ÄÚÀÎÀÇ ¼ö·®
-    uint64_t    order_total,		// ÁÖ¹® ±İ¾×
-                filled_total,		// Ã¼°á ±İ¾×
-                created_at,			// °Å·¡¸¦ ÁÖ¹®ÇÑ ½Ã°¢ Unix timestamp(milliseconds)
-                last_filled_at;		// °Å·¡°¡ ºÎºĞ Ã¼°áµÈ ÃÖÁ¾ ½Ã°¢ Unix timestamp(milliseconds)
-    std::string status;				// ÇöÀç ÁÖ¹®ÀÇ »óÅÂ ('unfilled', 'partially_filled', 'filled')
-    long double fee;				// °Å·¡ ¼ö¼ö·á
-    // id(ÁÖ¹®ÀÇ ID ½Äº°¹øÈ£)´Â map ÀÚ·áÇü¿¡¼­ key°ªÀ¸·Î »ç¿ë ¿¹Á¤
+    std::string currency_pair,		// í•´ë‹¹ í†µí™”ìŒ
+                side;				// ë§¤ìˆ˜/ë§¤ë„ êµ¬ë¶„ (ë§¤ìˆ˜: bid, ë§¤ë„: ask)
+    uint64_t    avg_price,			// ì²´ê²° ê°€ê²©ì˜ ê°€ì¤‘ í‰ê· ì¹˜
+                price;				// ì£¼ë¬¸ ì‹œì— ì„¤ì •í•œ ì§€ì •ê°€, ê¸°ë³¸ê°’ì€ 0 
+    long double order_amount,		// ì£¼ë¬¸ ì‹œì— ì§€ì •í•œ ì½”ì¸ì˜ ìˆ˜ëŸ‰
+                filled_amount;		// í˜„ì¬ê¹Œì§€ ì²´ê²°ëœ ì½”ì¸ì˜ ìˆ˜ëŸ‰
+    uint64_t    order_total,		// ì£¼ë¬¸ ê¸ˆì•¡
+                filled_total,		// ì²´ê²° ê¸ˆì•¡
+                created_at,			// ê±°ë˜ë¥¼ ì£¼ë¬¸í•œ ì‹œê° Unix timestamp(milliseconds)
+                last_filled_at;		// ê±°ë˜ê°€ ë¶€ë¶„ ì²´ê²°ëœ ìµœì¢… ì‹œê° Unix timestamp(milliseconds)
+    std::string status;				// í˜„ì¬ ì£¼ë¬¸ì˜ ìƒíƒœ ('unfilled', 'partially_filled', 'filled')
+    long double fee;				// ê±°ë˜ ìˆ˜ìˆ˜ë£Œ
+    // id(ì£¼ë¬¸ì˜ ID ì‹ë³„ë²ˆí˜¸)ëŠ” map ìë£Œí˜•ì—ì„œ keyê°’ìœ¼ë¡œ ì‚¬ìš© ì˜ˆì •
 public:		
 
-}
+};
 
-#endifÁ¤ 
+#endif
