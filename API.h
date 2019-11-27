@@ -12,8 +12,8 @@ class Gazua::API {
 private:
     std::optional<Token> token;
 public:
-    void access(const std::string& key, const std::string& secret);
-    void refresh();
+    bool access(const std::string& key, const std::string& secret);
+    bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
     bool refreshCoinInfos(std::shared_ptr<std::unordered_map<std::string, CoinInfo>> coinInfos);
