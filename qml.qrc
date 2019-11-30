@@ -1,6 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>main.qml</file>
+        <file>gui-kms/stock/Banner.qml</file>
+        <file>gui-kms/stock/Button.qml</file>
+        <file>gui-kms/stock/CheckBox.qml</file>
+        <file>gui-kms/stock/Settings.qml</file>
+        <file>gui-kms/stock/StockChart.qml</file>
+        <file>gui-kms/stock/StockInfo.qml</file>
+        <file>gui-kms/stock/StockListDelegate.qml</file>
+        <file>gui-kms/stock/StockListModel.qml</file>
+        <file>gui-kms/stock/StockListView.qml</file>
+        <file>gui-kms/stock/StockModel.qml</file>
+        <file>gui-kms/stock/StockSettingsPanel.qml</file>
+        <file>gui-kms/stock/StockView.qml</file>
     </qresource>
 </RCC>
