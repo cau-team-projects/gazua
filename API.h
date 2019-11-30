@@ -12,6 +12,7 @@
 
 #include "AmountType.h"
 #include "CoinInfo.h"
+#include "CoinType.h"
 #include "Order.h"
 #include "OrderType.h"
 #include "Token.h"
