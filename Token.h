@@ -12,7 +12,7 @@ private:
     constexpr static uint32_t VIEW = 1 << 0;
     constexpr static uint32_t TRADE = 1 << 1;
     constexpr static uint32_t WITHDRAWL = 1 << 2;
-//    TokenType tokenType;
+    TokenType tokenType;
     uint32_t scope;
     uint32_t expiration;
     std::string accessToken;

@@ -2,53 +2,29 @@
 #include <QtNetwork>
 #include <QString>
 #include <QUrl>
+#include <QJsonDocument>
 #include "API.h"
 
 Gazua::API::API(): m_token{}
 {}
-/*
+
 bool Gazua::API::access(const QString& key, const QString& secret) {
-
-    connect(m_accessReply, &QNetworkReply::finished, this, &Gazua::API::accessFinished);
-    const QString url_qs = "https://api.korbit.co.kr/v1/oauth2/access_token";
-    QUrl url = url_qs;
-
     QUrlQuery query;
-    query.addQueryItem("client_id", QString::fromStdString(key));
-    query.addQueryItem("client_secret", QString::fromStdString(secret));
+    query.addQueryItem("client_id", key);
+    query.addQueryItem("client_secret", secret);
     query.addQueryItem("grant_type", "client_credentials");
-
-    QString data_qs = query.query(QUrl::FullyEncoded) ;
-    data_qs.replace("+", "%2B");
-    QByteArray data = data_qs.toUtf8();
-
-    QNetworkRequest req(url);
-    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    req.setHeader(QNetworkRequest::ContentLengthHeader, data.count());
-
-    m_accessReply = m_qnam.post(req, data);
-
-    QString accessData = (QString) m_accessReply->readAll();
-    QJsonDocument accessDoc = QJsonDocument::fromJson(accessData.toUtf8());
-    QJsonObject accessObj = accessDoc.object();
-
-    QJsonValue token_type = accessObj.value("token_type");
-    QJsonValue access_token = accessObj.value("access_token");
-    QJsonValue expires_in = accessObj.value("expires_in");
-    QJsonValue scope = accessObj.value("scope");
-    QJsonValue refresh_token = accessObj.value("refresh_token");
-
-    return true;
-}
-*/
-bool Gazua::API::access(const QString& key, const QString& secret) {
-    auto accessReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}});
-    connect(accessReply, &QNetworkReply::finished, this, [accessReply]() {
-        qDebug() << QString::fromUtf8(accessReply->readAll());
-        accessReply->close();
-        // accessReply->deleteLater(); not sure
+    QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    auto reply = m_qnam.post(request, query.query().toUtf8());
+    connect(reply, &QNetworkReply::finished, this, [reply]() {
+        auto jsonObj = QJsonDocument::fromJson(QString::fromUtf8(reply->readAll()).object();
+        auto tokenType = jsonObj["token_type"];
+        auto accessToken = jsonObj["access_token"].toString();
+        auto scope = jsonObj["scope"].toString().split(',', QString::SkipEmptyParts);
+        auto refreshToken = jsonObj["refresh_token"].toString();
+        reply->close();
+        // reply->deleteLater(); not sure
     });
-
     return true;
 }
 
