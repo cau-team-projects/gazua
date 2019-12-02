@@ -20,15 +20,18 @@ HEADERS += \
         CoinInfo.h \
         CoinModel.h \
         CoinType.h \
+        Order.h \
         OrderType.h \
         Token.h \
         TokenType.h
 
 SOURCES += \
+        API-kms.cpp \
         API-s.cpp \
         CoinInfo.cpp \
         CoinType.cpp \
         CoinModel.cpp \
+        Order.cpp \
         Token.cpp \
         main.cpp \
         API-gonapps.cpp
