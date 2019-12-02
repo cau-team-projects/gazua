@@ -1,6 +1,8 @@
 #include "API.h"
 
-bool Gazua::CoinInfo::set(double _timestamp, double _last, double _open, double _bid, double _ask, double _low, double _high, double _volume, double _change, double _changePercent, double _tick_size, double _min_price, double _max_price, double _order_min_size, double _order_max_size)
+
+
+Gazua::CoinInfo::CoinInfo(double _timestamp, double _last, double _open, double _bid, double _ask, double _low, double _high, double _volume, double _change, double _changePercent, double _tick_size, double _min_price, double _max_price, double _order_min_size, double _order_max_size)
 {
     timestamp = (long long)_timestamp;
     last = _last;
@@ -17,5 +19,4 @@ bool Gazua::CoinInfo::set(double _timestamp, double _last, double _open, double 
     max_price = _max_price;
     order_min_size = _order_min_size;
     order_max_size = _order_max_size;
-	return true;
 }

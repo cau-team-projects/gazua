@@ -1,7 +1,17 @@
 #include "API.h"
 
-const std::vector<CoinType> coin_type = {
-	"bch_krw",
+namespace Gazua {
+    class CoinType;
+};
+
+class CoinType {
+public:
+    static const QVector<std::string> coin_type;
+
+};
+
+const QVector<std::string> Gazua::CoinType::coin_type = {
+    "bch_krw",
     "fet_krw",
     "bnb_krw",
     "loom_krw",
@@ -31,4 +41,3 @@ const std::vector<CoinType> coin_type = {
     "omg_krw",
     "ltc_krw"
 };
-

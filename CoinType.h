@@ -1,13 +1,16 @@
 #ifndef COIN_TYPE_H
 #define COIN_TYPE_H
 
+#include <string>
+#include <QVector>
+
 namespace Gazua {
     class CoinType;
 };
 
 class Gazua::CoinType {
 public:
-    const std::vector<CoinType> coin_type;
+    static const QVector<std::string> coin_type;
 };
 
 #endif

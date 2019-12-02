@@ -4,8 +4,8 @@
 #include <map>
 #include <memory>
 #include <optional>
-#include <vector>
-
+#include <Qvector>
+#include <Qmap>
 #include <QtNetwork>
 #include <QNetworkAccessManager>
 #include <QObject>
@@ -41,7 +41,7 @@ public:
     bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
-    bool refreshCoinInfos(std::shared_ptr<std::unordered_map<std::string, CoinInfo>> coinInfos);
+    bool refreshCoinInfos(std::shared_ptr<QMap<std::string, CoinInfo>> coinInfos);
 
     // GET https://api.korbit.co.kr/v1/user/balances
     // GET https://api.korbit.co.kr/v1/user/volume
@@ -53,10 +53,10 @@ public:
     bool sell(const std::string& coinName, OrderType orderType, uint64_t price, uint64_t amount);
 
     // POST https://api.korbit.co.kr/v1/user/orders/cancel
-    bool cancel(const std::string& coinName, const std::vector<uint64_t>& ids);
+    bool cancel(const std::string& coinName, const QVector<uint64_t>& ids);
 
     // GET https://api.korbit.co.kr/v1/user/orders
-    bool getOrders(std::shared_ptr<std::map<uint64_t, Order>> orders, const std::string& coinName, const std::vector<uint64_t>& ids, uint64_t limit = 10);
+    bool getOrders(std::shared_ptr<std::map<uint64_t, Order>> orders, const std::string& coinName, const QVector<uint64_t>& ids, uint64_t limit = 10);
 
 public slots:
     void accessFinished();

@@ -1,6 +1,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
+#include <QMap>
 #include <QNetworkRequest>
 #include <QDebug>
 #include <QEventLoop>
@@ -8,9 +9,10 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QMap>
 #include "API.h"
 
-bool Gazua::API::refreshCoinInfos(std::shared_ptr<std::unordered_map<std::string, CoinInfo>> coinInfos) {
+bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<std::string, CoinInfo>> coinInfos) {
 
     QNetworkAccessManager networkManager;
     QUrl detailUrl("https://api.korbit.co.kr/v1/ticker/detailed/all");
@@ -20,13 +22,13 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<std::unordered_map<std::string
     request.setUrl(detailUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     connect(&networkManager, SIGNAL(finished(m_refreshCoinInfosReply)), this, SLOT(onResult(m_refreshCoinInfosReply)));
-    if (m_currentReply->error() != QNetworkReply::NoError) return false;
+    if (m_refreshCoinInfosReply->error() != QNetworkReply::NoError) return false;
     QString detailData = (QString) m_refreshCoinInfosReply->readAll();
 
     request.setUrl(constraintUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     connect(&networkManager, SIGNAL(finished(m_refreshCoinInfosReply)), this, SLOT(onResult(m_refreshCoinInfosReply)));
-    if (m_currentReply->error() != QNetworkReply::NoError) return false;
+    if (m_refreshCoinInfosReply->error() != QNetworkReply::NoError) return false;
     QString constraintData = (QString) m_refreshCoinInfosReply->readAll();
 
 
@@ -37,9 +39,9 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<std::unordered_map<std::string
     QJsonObject constraintObj = constraintDoc.object().value(QString("exchange")).toObject();
 	
 	
-    for(auto coin : CoinType::coin_type) {
+    for(std::string coin : Gazua::CoinType::coin_type) {
     	
-        QJsonValue coinDetailVal = detailObj.value(QString(coin));
+        QJsonValue coinDetailVal = detailObj.value(QString::fromStdString(coin));
         QJsonObject coinDetailObj = coinDetailVal.toObject();
 
         QJsonValue timestamp = coinDetailObj.value(QString("timestamp"));
@@ -53,7 +55,7 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<std::unordered_map<std::string
         QJsonValue change = coinDetailObj.value(QString("change"));
         QJsonValue changePercent = coinDetailObj.value(QString("changePercent"));
         
-        QJsonValue coinConstraintVal = constraintObj.value(QString(coin));
+        QJsonValue coinConstraintVal = constraintObj.value(QString::fromStdString(coin));
         QJsonObject coinConstraintObj = coinConstraintVal.toObject();
 
         QJsonValue tick_size = coinDetailObj.value(QString("tick_size"));
@@ -62,25 +64,22 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<std::unordered_map<std::string
         QJsonValue order_min_size = coinDetailObj.value(QString("order_min_size"));
         QJsonValue order_max_size = coinDetailObj.value(QString("order_max_size"));
 
-        CoinInfo coinInfo = new CoinInfo(
-		                                    timestamp.toString().toDouble(),
-		                                    last.toString().toDouble(),
-		                                    open.toString().toDouble(),
-		                                    bid.toString().toDouble(),
-		                                    ask.toString().toDouble(),
-		                                    low.toString().toDouble(),
-		                                    high.toString().toDouble(),
-		                                    volume.toString().toDouble(),
-		                                    change.toString().toDouble(),
-		                                    changePercent.toString().toDouble(),
-		                                    tick_size.toString().toDouble(),
-		                                    min_price.toString().toDouble(),
-		                                    max_price.toString().toDouble(),
-		                                    order_min_size.toString().toDouble(),
-		                                    order_max_size.toString().toDouble()
-		                                );
-        coinInfos.insert(std::make_pair(coin, CoinInfo));
-	    
+        (coinInfos.get())->find(coin).value().timestamp = timestamp.toString().toDouble();
+        (coinInfos.get())->find(coin).value().last = last.toString().toDouble();
+        (coinInfos.get())->find(coin).value().open = open.toString().toDouble();
+        (coinInfos.get())->find(coin).value().bid = bid.toString().toDouble();
+        (coinInfos.get())->find(coin).value().ask = ask.toString().toDouble();
+        (coinInfos.get())->find(coin).value().low = low.toString().toDouble();
+        (coinInfos.get())->find(coin).value().high = high.toString().toDouble();
+        (coinInfos.get())->find(coin).value().volume = volume.toString().toDouble();
+        (coinInfos.get())->find(coin).value().change = change.toString().toDouble();
+        (coinInfos.get())->find(coin).value().changePercent = changePercent.toString().toDouble();
+        (coinInfos.get())->find(coin).value().tick_size = tick_size.toString().toDouble();
+        (coinInfos.get())->find(coin).value().min_price = min_price.toString().toDouble();
+        (coinInfos.get())->find(coin).value().max_price = max_price.toString().toDouble();
+        (coinInfos.get())->find(coin).value().order_min_size = order_min_size.toString().toDouble();
+        (coinInfos.get())->find(coin).value().order_max_size = order_max_size.toString().toDouble();
+
     }
     
     return true;
