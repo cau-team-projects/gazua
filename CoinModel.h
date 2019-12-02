@@ -25,6 +25,8 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    void append(QPair<std::time_t, QMap<std::string, Gazua::CoinInfo>>* newCoinInfo);
+    void remove(qint64 index);
     void setMap(QMap<std::time_t, QMap<std::string, Gazua::CoinInfo>>* coinInfosMap) { this->coinInfosMap = coinInfosMap; }
 };
 
