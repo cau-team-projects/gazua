@@ -1,6 +1,7 @@
 #ifndef COIN_INFO_H
 #define COIN_INFO_H
 
+#include <QMetaType>
 #include <ctime>
 #include <memory>
 
@@ -30,5 +31,7 @@ public:
             order_max_size; //매수/매도 수량 최대 입력값    
     explicit CoinInfo();
 };
+
+Q_DECLARE_METATYPE(Gazua::CoinInfo)
 
 #endif

@@ -15,7 +15,7 @@ class CoinModel : public QAbstractTableModel {
     Q_OBJECT
 
 private:
-    QMap<QString, QMap<QString, Gazua::CoinInfo>>* coinInfosMap;
+    QMap<QString, QVariant>* coinInfosMap;
 
 public:
     enum MapRoles {
@@ -27,10 +27,16 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    void timerHit();
-    void append(QMap<QString, Gazua::CoinInfo> &newCoinInfo);
+    int count() const;
+
+public slots:
+    void append(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> newCoinInfo);
     void remove(QString index);
-    void setMap(QMap<QString, QMap<QString, Gazua::CoinInfo>>* coinInfosMap) { this->coinInfosMap = coinInfosMap; }
+    void setMap(QMap<QString, QVariant> *coinInfosMap) { this->coinInfosMap = coinInfosMap; }
+
+signals:
+    void countChanged(int count);
+
 };
 
 #endif
