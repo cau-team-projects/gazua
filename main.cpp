@@ -1,22 +1,22 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
 
+#include <QtGui/QGuiApplication>
+#include <QtCore/QDir>
+#include <QtQuick/QQuickView>
+#include <QtQml/QQmlEngine>
 #include "API.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
+    QQuickView viewer;
+    Gazua::API api;
+    //viewer.rootContext()->setContextProperty("api",&api);
+    viewer.setSource(QUrl("qrc:/main.qml"));
+    viewer.setTitle(QStringLiteral("GAZUA"));
+    viewer.setResizeMode(QQuickView::SizeRootObjectToView);
+    viewer.setColor(QColor("#FCFCFC"));
+    viewer.show();
 
     return app.exec();
 }
