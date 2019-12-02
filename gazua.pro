@@ -19,7 +19,6 @@ HEADERS += \
         Balance.h \
         CoinInfo.h \
         CoinModel.h \
-        CoinType.h \
         Order.h \
         OrderType.h \
         Token.h \
@@ -29,7 +28,6 @@ SOURCES += \
         API-kms.cpp \
         API-s.cpp \
         CoinInfo.cpp \
-        CoinType.cpp \
         CoinModel.cpp \
         Order.cpp \
         Token.cpp \
