@@ -17,8 +17,8 @@ bool Gazua::API::getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const 
     qUrl.addQueryItem("limit", QString::number(limit));
 
     QNetworkRequest network;
-    auto header = QString("Bearer %1").arg(this->m_token);
-    network.setRawHeader(QByteArray("Authorization"), header);
+    auto header = QString("Bearer %1").arg(*(this->m_token->accessToken()));
+    network.setRawHeader(QByteArray("Authorization"), header.toUtf8());
 
     network.setUrl(qUrl.toString());
 
