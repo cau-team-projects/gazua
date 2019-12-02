@@ -4,11 +4,12 @@
 #include <map>
 #include <memory>
 #include <optional>
-#include <Qvector>
-#include <Qmap>
+#include <QVector>
+#include <QMap>
 #include <QtNetwork>
 #include <QNetworkAccessManager>
 #include <QObject>
+#include <QString>
 
 #include "AmountType.h"
 #include "CoinInfo.h"
@@ -37,26 +38,26 @@ private:
 
 public:
     explicit API();
-    bool access(const std::string& key, const std::string& secret);
+    bool access(const QString& key, const QString& secret);
     bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
-    bool refreshCoinInfos(std::shared_ptr<QMap<std::string, CoinInfo>> coinInfos);
+    bool refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinInfos);
 
     // GET https://api.korbit.co.kr/v1/user/balances
     // GET https://api.korbit.co.kr/v1/user/volume
     bool refreshUserInfo(std::shared_ptr<UserInfo> userInfo);
 
     // POST https://api.korbit.co.kr/v1/user/orders/buy
-    bool buy(const std::string& coinName, OrderType orderType, uint64_t price, AmountType amountType, uint64_t amount);
+    bool buy(const QString& coinName, OrderType orderType, uint64_t price, AmountType amountType, uint64_t amount);
     // POST https://api.korbit.co.kr/v1/user/orders/sell
-    bool sell(const std::string& coinName, OrderType orderType, uint64_t price, uint64_t amount);
+    bool sell(const QString& coinName, OrderType orderType, uint64_t price, uint64_t amount);
 
     // POST https://api.korbit.co.kr/v1/user/orders/cancel
-    bool cancel(const std::string& coinName, const QVector<uint64_t>& ids);
+    bool cancel(const QString& coinName, const QVector<uint64_t>& ids);
 
     // GET https://api.korbit.co.kr/v1/user/orders
-    bool getOrders(std::shared_ptr<std::map<uint64_t, Order>> orders, const std::string& coinName, const QVector<uint64_t>& ids, uint64_t limit = 10);
+    bool getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const QString& coinName, const QVector<uint64_t>& ids, uint64_t limit = 10);
 
 public slots:
     void accessFinished();

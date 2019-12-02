@@ -10,9 +10,10 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QMap>
+#include <QString>
 #include "API.h"
 
-bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<std::string, CoinInfo>> coinInfos) {
+bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinInfos) {
 
     QNetworkAccessManager networkManager;
     QUrl detailUrl("https://api.korbit.co.kr/v1/ticker/detailed/all");
@@ -39,7 +40,7 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<std::string, CoinInfo>> c
     QJsonObject constraintObj = constraintDoc.object().value(QString("exchange")).toObject();
 	
 	
-    for(std::string coin : Gazua::CoinType::coin_type) {
+    for(QString coin : Gazua::CoinType::coin_type) {
     	
         QJsonValue coinDetailVal = detailObj.value(QString::fromStdString(coin));
         QJsonObject coinDetailObj = coinDetailVal.toObject();
