@@ -40,9 +40,9 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
     QJsonObject constraintObj = constraintDoc.object().value(QString("exchange")).toObject();
 	
 	
-    for(QString coin : Gazua::CoinType::coin_type) {
+    for(QString coin : Gazua::CoinType::coinType) {
     	
-        QJsonValue coinDetailVal = detailObj.value(QString::fromStdString(coin));
+        QJsonValue coinDetailVal = detailObj.value(coin);
         QJsonObject coinDetailObj = coinDetailVal.toObject();
 
         QJsonValue timestamp = coinDetailObj.value(QString("timestamp"));
@@ -56,7 +56,7 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
         QJsonValue change = coinDetailObj.value(QString("change"));
         QJsonValue changePercent = coinDetailObj.value(QString("changePercent"));
         
-        QJsonValue coinConstraintVal = constraintObj.value(QString::fromStdString(coin));
+        QJsonValue coinConstraintVal = constraintObj.value(coin);
         QJsonObject coinConstraintObj = coinConstraintVal.toObject();
 
         QJsonValue tick_size = coinDetailObj.value(QString("tick_size"));

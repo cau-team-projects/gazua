@@ -58,9 +58,6 @@ public:
 
     // GET https://api.korbit.co.kr/v1/user/orders
     bool getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const QString& coinName, const QVector<uint64_t>& ids, uint64_t limit = 10);
-
-public slots:
-    void accessFinished();
 };
 
 #endif

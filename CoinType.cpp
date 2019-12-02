@@ -1,4 +1,6 @@
 #include "API.h"
+#include <QVector>
+#include <QString>
 
 namespace Gazua {
     class CoinType;
@@ -6,11 +8,10 @@ namespace Gazua {
 
 class CoinType {
 public:
-    static const QVector<std::string> coin_type;
-
+    static const QVector<QString> coinType;
 };
 
-const QVector<std::string> Gazua::CoinType::coin_type = {
+const QVector<QString> Gazua::CoinType::coinType = {
     "bch_krw",
     "fet_krw",
     "bnb_krw",

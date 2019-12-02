@@ -10,7 +10,7 @@ namespace Gazua {
 
 class Gazua::CoinType {
 public:
-    static const QVector<std::string> coin_type;
+    static const QVector<QString> coinType;
 };
 
 #endif
