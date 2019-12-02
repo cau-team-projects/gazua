@@ -343,7 +343,7 @@ Item {
                 Item {
                     width: 256
                     height: 256
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.horizontalCenter:Layout.alignment
                     Image {
                         anchors.fill: parent
                         fillMode: Image.PreserveAspectFit
