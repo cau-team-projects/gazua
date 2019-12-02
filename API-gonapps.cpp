@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QJsonDocument>
 #include "API.h"
+#include "Token.h"
 
 Gazua::API::API(): m_token{}
 {}
@@ -16,12 +17,14 @@ bool Gazua::API::access(const QString& key, const QString& secret) {
     QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     auto reply = m_qnam.post(request, query.query().toUtf8());
-    connect(reply, &QNetworkReply::finished, this, [reply]() {
-        auto jsonObj = QJsonDocument::fromJson(QString::fromUtf8(reply->readAll()).object();
-        auto tokenType = jsonObj["token_type"];
+    connect(reply, &QNetworkReply::finished, this, [this, reply] () {
+        auto jsonObj = QJsonDocument::fromJson(reply->readAll()).object();
+        auto tokenType = jsonObj["token_type"].toString() == "Bearer" ? TokenType::BEARER : TokenType::UNKNOWN;
+        auto scopeList = jsonObj["scope"].toString().split(',', QString::SkipEmptyParts);
+        auto expiration = jsonObj["expires_in"].toInt();
         auto accessToken = jsonObj["access_token"].toString();
-        auto scope = jsonObj["scope"].toString().split(',', QString::SkipEmptyParts);
         auto refreshToken = jsonObj["refresh_token"].toString();
+        m_token = Token(tokenType, 1, expiration, accessToken, refreshToken);
         reply->close();
         // reply->deleteLater(); not sure
     });
