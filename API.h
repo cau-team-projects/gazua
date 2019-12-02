@@ -28,13 +28,6 @@ class Gazua::API : public QObject {
 private:
     std::optional<Token> m_token;
     QNetworkAccessManager m_qnam;
-    QNetworkReply* m_accessReply;
-    QNetworkReply* m_refreshReply;
-    QNetworkReply* m_refreshCoinInfosReply;
-    QNetworkReply* m_buyReply;
-    QNetworkReply* m_sellReply;
-    QNetworkReply* m_cancelReply;
-    QNetworkReply* m_getOrdersReply;
 
 public:
     explicit API();

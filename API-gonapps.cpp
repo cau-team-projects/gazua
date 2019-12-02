@@ -42,11 +42,13 @@ bool Gazua::API::access(const QString& key, const QString& secret) {
 }
 */
 bool Gazua::API::access(const QString& key, const QString& secret) {
-    m_accessReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}});
-    connect(m_accessReply, &QNetworkReply::finished, this, [this]() {
-        qDebug() << QString::fromUtf8(m_accessReply->readAll());
-        m_accessReply->close();
+    auto accessReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}});
+    connect(accessReply, &QNetworkReply::finished, this, [accessReply]() {
+        qDebug() << QString::fromUtf8(accessReply->readAll());
+        accessReply->close();
+        // accessReply->deleteLater(); not sure
     });
+
     return true;
 }
 
