@@ -21,13 +21,13 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
     QByteArray constraintJson;
 
     auto detailReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}});
-    connect(detailReply, &QNetworkReply::finished, this, [detailReply](QByteArray detailJson) {
+    connect(detailReply, &QNetworkReply::finished, this, [detailReply, &detailJson] () {
         detailJson = detailReply->readAll();
         detailReply->close();
         // detailReply->deleteLater(); not sure
     });
     auto constraintReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}});
-    connect(constraintReply, &QNetworkReply::finished, this, [constraintReply](QByteArray constraintJson) {
+    connect(constraintReply, &QNetworkReply::finished, this, [constraintReply, &constraintJson] () {
         constraintJson = constraintReply->readAll();
         constraintReply->close();
         // constraintReply->deleteLater(); not sure
@@ -38,7 +38,10 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
 
     foreach (const QString& coinKey, detailObject.keys()) {
     	
-        if (coinInfos->contains(coinKey) == false) {CoinInfo newCoinInfo;    coinInfos->insert(coinKey, newCoinInfo);}
+        if (coinInfos->contains(coinKey) == false) {
+            CoinInfo newCoinInfo;
+            coinInfos->insert(coinKey, newCoinInfo);
+        }
 
         bool ok;
         coinInfos->find(coinKey).value().timestamp = detailObject.value("timestamp").toString().toLong(&ok, 10);
@@ -55,16 +58,12 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
     }
 
     foreach (const QString& coinKey, constraintObject.keys()) {
-
         QJsonObject coinObject = QJsonDocument::fromJson(coinKey.toUtf8()).object();
-        //  if (coinInfos->contains(coinKey) == false) {CoinInfo newCoinInfo;    coinInfos->insert(coinKey, newCoinInfo);}
-
         coinInfos->find(coinKey).value().tick_size = constraintObject.value("tick_size").toDouble();
         coinInfos->find(coinKey).value().min_price = constraintObject.value("min_price").toDouble();
         coinInfos->find(coinKey).value().max_price = constraintObject.value("max_price").toDouble();
         coinInfos->find(coinKey).value().order_min_size = constraintObject.value("order_min_size").toDouble();
         coinInfos->find(coinKey).value().order_max_size = constraintObject.value("order_max_size").toDouble();
-
     }
     
     return true;
