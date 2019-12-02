@@ -34,6 +34,7 @@ bool Gazua::API::access(const QString& key, const QString& secret) {
         const auto accessToken = jsonObj["access_token"].toString();
         const auto refreshToken = jsonObj["refresh_token"].toString();
         m_token = Token(tokenType, 1, expiration, accessToken, refreshToken);
+        qDebug() << *m_token;
         reply->close();
         // reply->deleteLater(); not sure
     });
