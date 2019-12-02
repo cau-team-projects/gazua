@@ -28,6 +28,14 @@ QDebug Gazua::operator<<(QDebug debug, const Gazua::Token& token) {
         debug.nospace() << "tokenType: Bearer" << "\n";
         break;
     }
+    debug.nospace() << "scope: ";
+    if(token.m_scope & Token::VIEW)
+        debug << "VIEW";
+    if(token.m_scope & Token::TRADE)
+        debug << "TRADE";
+    if(token.m_scope & Token::WITHDRAWL)
+        debug << "WITHDRAWL";
+    debug.nospace() << "\n";
     debug.nospace() << "currentTime: " << token.m_currentTime << "\n";
     debug.nospace() << "expiration: " << token.m_expiration << "\n";
     debug.nospace() << "accessToken: " << token.m_accessToken << "\n";
