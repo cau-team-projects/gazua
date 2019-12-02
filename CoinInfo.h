@@ -29,6 +29,7 @@ public:
             order_min_size, //매수/매도 수량 최소 입력값
             order_max_size; //매수/매도 수량 최대 입력값    
 
+    CoinInfo();
     CoinInfo(double _timestamp, double _last, double _open, double _bid, double _ask, double _low, double _high, double _volume, double _change, double _changePercent, double _tick_size, double _min_price, double _max_price, double _order_min_size, double _order_max_size);
 
 };
