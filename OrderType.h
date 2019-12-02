@@ -3,9 +3,13 @@
 
 #include <cstdint>
 
-enum class OrderType : uint8_t {
-    LIMIT,
-    MARKET
+namespace Gazua {
+
+    enum class OrderType : uint8_t {
+        LIMIT,
+        MARKET
+    };
+
 };
 
 #endif

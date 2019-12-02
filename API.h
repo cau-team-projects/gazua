@@ -10,13 +10,13 @@
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QString>
-
 #include "AmountType.h"
 #include "CoinInfo.h"
 #include "CoinType.h"
 #include "Order.h"
 #include "OrderType.h"
 #include "Token.h"
+#include "TokenType.h"
 #include "UserInfo.h"
 
 namespace Gazua {

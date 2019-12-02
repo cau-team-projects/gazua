@@ -1,5 +1,6 @@
 #include <optional>
 #include "Token.h"
+#include "TokenType.h"
 
 Gazua::Token::Token(TokenType tokenType, uint32_t scope, uint32_t expiration, const QString& accessToken, const QString& refreshToken) {
     m_scope = scope;

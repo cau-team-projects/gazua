@@ -18,6 +18,7 @@ HEADERS += \
         AmountType.h \
         Balance.h \
         CoinInfo.h \
+        CoinModel.h \
         CoinType.h \
         OrderType.h \
         Token.h \
@@ -27,7 +28,7 @@ SOURCES += \
         API-s.cpp \
         CoinInfo.cpp \
         CoinType.cpp \
-        Model.cpp \
+        CoinModel.cpp \
         Token.cpp \
         main.cpp \
         API-gonapps.cpp
