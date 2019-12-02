@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 
     QQuickView viewer;
     Gazua::API api;
+    api.access("key", "secret");
     //viewer.rootContext()->setContextProperty("api",&api);
     viewer.setSource(QUrl("qrc:/main.qml"));
     viewer.setTitle(QStringLiteral("GAZUA"));

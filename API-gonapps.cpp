@@ -44,8 +44,8 @@ bool Gazua::API::access(const QString& key, const QString& secret) {
 bool Gazua::API::access(const QString& key, const QString& secret) {
     m_accessReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}});
     connect(m_accessReply, &QNetworkReply::finished, this, [this]() {
-        m_accessReply->close();
         qDebug() << QString::fromUtf8(m_accessReply->readAll());
+        m_accessReply->close();
     });
     return true;
 }
