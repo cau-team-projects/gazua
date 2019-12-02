@@ -2,17 +2,21 @@
 #define TOKEN_H
 
 #include <optional>
+#include <QDebug>
+#include <QtGlobal>
 #include <QString>
 #include "TokenType.h"
 
 namespace Gazua {
     class Token;
+    QDebug operator<<(QDebug, const Gazua::Token&);
 };
 
 class Gazua::Token {
 private:
     TokenType m_tokenType;
     uint32_t m_scope;
+    qint64 m_currentTime;
     uint32_t m_expiration;
     QString m_accessToken;
     QString m_refreshToken;
@@ -22,6 +26,7 @@ public:
     constexpr static uint32_t WITHDRAWL = 1 << 2;
     explicit Token(TokenType tokenType, uint32_t scope, uint32_t expiration, const QString& accessToken, const QString& refreshToken);
     std::optional<QString> accessToken();
+    friend QDebug operator<<(QDebug, const Gazua::Token&);
 };
 
 #endif
