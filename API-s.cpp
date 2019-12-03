@@ -39,7 +39,7 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
     });
 
     for(const QString& coinKey : detailObject.keys()) {
-    	
+
         if (coinInfos->contains(coinKey) == false) {
             CoinInfo *newCoinInfo = new CoinInfo();
             coinInfos->insert(coinKey, *newCoinInfo);
