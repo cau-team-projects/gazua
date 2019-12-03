@@ -6,13 +6,13 @@
 #include "API.h"
 #include "Token.h"
 
-Gazua::API::API(): m_token{}
+Gazua::API::API(QString&& key, QString&& secret): m_key{std::move(key)}, m_secret{std::move(secret)}, m_token{}
 {}
 
-bool Gazua::API::access(const QString& key, const QString& secret) {
+bool Gazua::API::access() {
     QUrlQuery query;
-    query.addQueryItem("client_id", key);
-    query.addQueryItem("client_secret", secret);
+    query.addQueryItem("client_id", m_key);
+    query.addQueryItem("client_secret", m_secret);
     query.addQueryItem("grant_type", "client_credentials");
     QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -46,12 +46,12 @@ bool Gazua::API::access(const QString& key, const QString& secret) {
     return true;
 }
 
-bool Gazua::API::refresh(const QString& key, const QString& secret) {
+bool Gazua::API::refresh() {
     if(!m_token.has_value() || !m_token.value().refreshToken().has_value())
         return false;
     QUrlQuery query;
-    query.addQueryItem("client_id", key);
-    query.addQueryItem("client_secret", secret);
+    query.addQueryItem("client_id", m_key);
+    query.addQueryItem("client_secret", m_secret);
     query.addQueryItem("grant_type", "refresh_token");
     query.addQueryItem("refresh_token", m_token.value().refreshToken().value());
     QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};

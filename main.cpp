@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
         secret = std::move(apiKeyStream.readLine());
 
     QQuickView viewer;
-    Gazua::API api;
-    api.access(key, secret);
+    Gazua::API api{std::move(key), std::move(secret)};
+    api.access();
     //viewer.rootContext()->setContextProperty("api",&api);
     viewer.setSource(QUrl("qrc:/main.qml"));
     viewer.setTitle(QStringLiteral("GAZUA"));

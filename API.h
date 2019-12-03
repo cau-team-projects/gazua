@@ -25,13 +25,15 @@ namespace Gazua {
 class Gazua::API : public QObject {
     Q_OBJECT
 private:
+    QString m_key;
+    QString m_secret;
     std::optional<Token> m_token;
     QNetworkAccessManager m_qnam;
 
 public:
-    explicit API();
-    bool access(const QString& key, const QString& secret);
-    bool refresh(const QString& key, const QString& secret);
+    explicit API(QString&& key, QString&& secret);
+    bool access();
+    bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
     bool refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinInfos);
