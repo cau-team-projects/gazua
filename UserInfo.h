@@ -15,6 +15,8 @@ private:
     QMap<QString, Volume> m_volumes;
 public:
     explicit UserInfo();
+    const QMap<QString, Balance>& balances() const;
+    QMap<QString, Balance>& balances();
 };
 
 #endif

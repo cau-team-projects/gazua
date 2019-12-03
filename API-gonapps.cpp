@@ -95,12 +95,22 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     connect(reply, &QNetworkReply::finished, this, [reply, userInfo] () {
         const auto root = QJsonDocument::fromJson(reply->readAll()).object();
         for(const auto& coinName : root.keys()) {
+
+             auto& balances = userInfo->balances();
+
+             auto& balance = balances[coinName];
+             balance.available = root[coinName]["available"].toString().toDouble();
+             balance.trade_in_use = root[coinName]["trade_in_use"].toString().toDouble();
+             balance.withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(); 
+             balance.avg_price = root[coinName]["avg_price"].toString().toDouble();
+             balance.avg_price_updated_at = root[coinName]["avg_price_updated_at"].toDouble();
+
              qDebug() << coinName << ">>>>>>>>>>>>>>>>";
-             qDebug() << "available: " << root[coinName]["available"].toString().toDouble();
-             qDebug() << "trade_in_use: " << root[coinName]["trade_in_use"].toString().toDouble();
-             qDebug() << "withdrawal_in_use: " << root[coinName]["withdrawal"].toString().toDouble();
-             qDebug() << "avg_price: " << root[coinName]["avg_price"].toString().toDouble();
-             qDebug() << "avg_price_updated_at: " << root[coinName]["avg_price_updated_at"].toDouble();
+             qDebug() << "available: " << balance.available;
+             qDebug() << "trade_in_use: " << balance.trade_in_use;
+             qDebug() << "withdrawal_in_use: " << balance.withdrawal_in_use;
+             qDebug() << "avg_price: " << balance.avg_price;
+             qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
         }
     });
     return true;
