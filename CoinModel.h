@@ -2,7 +2,9 @@
 #define COINMODEL_H
 
 #include <QAbstractTableModel>
+#include <QString>
 #include <QMap>
+#include <QTimer>
 #include "CoinInfo.h"
 
 namespace Gazua {
@@ -13,7 +15,7 @@ class CoinModel : public QAbstractTableModel {
     Q_OBJECT
 
 private:
-    QMap<std::time_t, QMap<std::string, Gazua::CoinInfo>>* coinInfosMap;
+    QMap<QString, QVariant>* coinInfosMap;
 
 public:
     enum MapRoles {
@@ -25,9 +27,16 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    void append(QPair<std::time_t, QMap<std::string, Gazua::CoinInfo>>* newCoinInfo);
-    void remove(qint64 index);
-    void setMap(QMap<std::time_t, QMap<std::string, Gazua::CoinInfo>>* coinInfosMap) { this->coinInfosMap = coinInfosMap; }
+    int count() const;
+
+public slots:
+    void append(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> newCoinInfo);
+    void remove(QString index);
+    void setMap(QMap<QString, QVariant> *coinInfosMap) { this->coinInfosMap = coinInfosMap; }
+
+signals:
+    void countChanged(int count);
+
 };
 
 #endif

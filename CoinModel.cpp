@@ -20,18 +20,22 @@ QVariant CoinModel::data(const QModelIndex& index, int role) const
     if      (!coinInfosMap)                                                                      return QVariant();
     else if (index.row() < 0 || index.row() >= coinInfosMap->count() || role != Qt::DisplayRole) return QVariant();
 
-    else if (index.column() == 0) return (qint64)coinInfosMap->keys().at(index.row());
-    else if (index.column() == 1) return &(coinInfosMap->values().at(index.row()));
+    else if (index.column() == 0) return coinInfosMap->keys().at(index.row());
+    else if (index.column() == 1) return coinInfosMap->values().at(index.row());
 
     else return QVariant();
 }
 
-void CoinModel::append(QPair<std::time_t, QMap<std::string, Gazua::CoinInfo>>* newCoinInfo) {
-    coinInfosMap->insert(newCoinInfo->first, newCoinInfo->second);
+void CoinModel::append(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> newCoinInfo) {
+
+    QVariant newCoinInfoQVariant = qVariantFromValue(*newCoinInfo);
+    coinInfosMap->insert(QTime::currentTime().toString(), newCoinInfoQVariant);
     return;
 }
 
-void CoinModel::remove(qint64 index) {
+void CoinModel::remove(QString index) {
     coinInfosMap->remove(index);
     return;
 }
+
+Q_PROPERTY(int count READ count NOTIFY countChanged)

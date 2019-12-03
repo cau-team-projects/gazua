@@ -53,4 +53,5 @@ DISTFILES += \
     gui-kms/InfoSheet.qml \
     gui-kms/Navibutton.qml \
     gui-kms/SwipeArea.qml \
+    gui-kms/gui.qml \
     gui-kms/oneqt.qml

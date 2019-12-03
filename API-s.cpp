@@ -20,13 +20,13 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
     QByteArray detailJson;
     QByteArray constraintJson;
 
-    auto detailReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}});
+    auto detailReply = m_qnam.get(QNetworkRequest{detailUrl});
     connect(detailReply, &QNetworkReply::finished, this, [detailReply, &detailJson] () {
         detailJson = detailReply->readAll();
         detailReply->close();
         // detailReply->deleteLater(); not sure
     });
-    auto constraintReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}});
+    auto constraintReply = m_qnam.get(QNetworkRequest{constraintUrl});
     connect(constraintReply, &QNetworkReply::finished, this, [constraintReply, &constraintJson] () {
         constraintJson = constraintReply->readAll();
         constraintReply->close();
