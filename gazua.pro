@@ -35,7 +35,6 @@ SOURCES += \
         API-gonapps.cpp
 
 RESOURCES += qml.qrc \
-    gui-kms/oneqt.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

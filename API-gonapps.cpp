@@ -77,3 +77,14 @@ bool Gazua::API::refresh(const QString& key, const QString& secret) {
     });
     return true;
 }
+
+// GET https://api.korbit.co.kr/v1/user/balances
+// GET https://api.korbit.co.kr/v1/user/volume
+bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
+    if(!m_token.has_value() || !m_token.value().accessToken().has_value())
+        return false;
+    const auto accessToken = m_token.value().accessToken().value();
+    QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/user/balances"}};
+    request.setRawHeader(QString{"Authorization"}.toUtf8(), QString{"Bearer %1"}.arg(accessToken).toUtf8());
+    return true;
+}

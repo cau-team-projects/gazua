@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>oneqt.qml</file>
-        <file>Navibutton.qml</file>
-        <file>InfoSheet.qml</file>
-        <file>ImageCube.qml</file>
-        <file>SwipeArea.qml</file>
-    </qresource>
-</RCC>
