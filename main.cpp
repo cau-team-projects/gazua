@@ -13,17 +13,6 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    //QQmlApplicationEngine engine;
-
-    //CoinModel *coinModel = new CoinModel(nullptr);
-
-    //QMap<QString, Gazua::CoinInfo> *tempCoinInfo = new QMap<QString, Gazua::CoinInfo>();
-    //std::shared_ptr<QMap<QString, Gazua::CoinInfo>> tempCoinInfoPtr(tempCoinInfo);
-    //api.refreshCoinInfos(tempCoinInfoPtr);
-    //coinModel->append(tempCoinInfoPtr);
-
-    //engine.rootContext()->setContextProperty("coinModel", coinModel);
-
     QFile apiKeyFile("apikey.txt");
     if(!apiKeyFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "API KEY NOT FOUND!";
@@ -45,6 +34,8 @@ int main(int argc, char *argv[])
     api.access();
     auto userInfo = std::make_shared<Gazua::UserInfo>();
     api.refreshUserInfo(userInfo);
+    auto coinInfos = std::make_shared<QMap<QString, Gazua::CoinInfo>>();
+    api.refreshCoinInfos(coinInfos);
 
     //viewer.rootContext()->setContextProperty("api",&api);
     viewer.setSource(QUrl("qrc:/main.qml"));
