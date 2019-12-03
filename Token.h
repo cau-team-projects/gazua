@@ -23,7 +23,7 @@ private:
 public:
     constexpr static uint32_t VIEW = 1 << 0;
     constexpr static uint32_t TRADE = 1 << 1;
-    constexpr static uint32_t WITHDRAWL = 1 << 2;
+    constexpr static uint32_t WITHDRAWAL = 1 << 2;
     explicit Token(TokenType tokenType, uint32_t scope, uint32_t expiration, const QString& accessToken, const QString& refreshToken);
     std::optional<QString> accessToken();
     std::optional<QString> refreshToken();

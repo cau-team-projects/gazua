@@ -27,8 +27,8 @@ bool Gazua::API::access() {
                 scope = scope | Token::VIEW;
             else if(scopeString == "TRADE")
                 scope = scope | Token::TRADE;
-            else if(scopeString == "WITHDRAWL")
-                scope = scope | Token::WITHDRAWL;
+            else if(scopeString == "WITHDRAWAL")
+                scope = scope | Token::WITHDRAWAL;
         }
         if(root["access_token"].isUndefined()) {
             m_token = std::nullopt;
@@ -94,8 +94,13 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     auto reply = m_qnam.get(request);
     connect(reply, &QNetworkReply::finished, this, [reply, userInfo] () {
         const auto root = QJsonDocument::fromJson(reply->readAll()).object();
-        for(const auto& key : root.keys()) {
-            qDebug() << key;
+        for(const auto& coinName : root.keys()) {
+             qDebug() << coinName << ">>>>>>>>>>>>>>>>";
+             qDebug() << "available: " << root[coinName]["available"].toDouble();
+             qDebug() << "trade_in_use: " << root[coinName]["trade_in_use"].toDouble();
+             qDebug() << "withdrawal_in_use: " << root[coinName]["withdrawal"].toDouble();
+             qDebug() << "avg_price: " << root[coinName]["avg_price"].toInt();
+             qDebug() << "avg_price_updated_at: " << root[coinName]["avg_price_updated_at"].toInt();
         }
     });
     return true;

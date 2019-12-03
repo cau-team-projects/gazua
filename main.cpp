@@ -34,8 +34,10 @@ int main(int argc, char *argv[])
     api.access();
     auto userInfo = std::make_shared<Gazua::UserInfo>();
     api.refreshUserInfo(userInfo);
+    /*
     auto coinInfos = std::make_shared<QMap<QString, Gazua::CoinInfo>>();
     api.refreshCoinInfos(coinInfos);
+    */
 
     //viewer.rootContext()->setContextProperty("api",&api);
     viewer.setSource(QUrl("qrc:/main.qml"));
