@@ -12,8 +12,9 @@ namespace Gazua {
 class Gazua::UserInfo {
 private:
     QMap<QString, Balance> m_balances;
+    QMap<QString, Volume> m_volumes;
 public:
-    explicit UserInfo(QMap<QString, Balance>&&, QMap<QString, Volume>&&);
+    explicit UserInfo();
 };
 
 #endif

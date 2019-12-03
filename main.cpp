@@ -32,10 +32,8 @@ int main(int argc, char *argv[])
     QQuickView viewer;
     Gazua::API api{std::move(key), std::move(secret)};
     api.access();
-/*
     auto userInfo = std::make_shared<Gazua::UserInfo>();
     api.refreshUserInfo(userInfo);
-*/
     /*
     auto coinInfos = std::make_shared<QMap<QString, Gazua::CoinInfo>>();
     api.refreshCoinInfos(coinInfos);
