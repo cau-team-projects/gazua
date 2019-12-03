@@ -31,7 +31,7 @@ private:
 public:
     explicit API();
     bool access(const QString& key, const QString& secret);
-    bool refresh();
+    bool refresh(const QString& key, const QString& secret);
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
     bool refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinInfos);

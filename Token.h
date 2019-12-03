@@ -26,6 +26,7 @@ public:
     constexpr static uint32_t WITHDRAWL = 1 << 2;
     explicit Token(TokenType tokenType, uint32_t scope, uint32_t expiration, const QString& accessToken, const QString& refreshToken);
     std::optional<QString> accessToken();
+    std::optional<QString> refreshToken();
     friend QDebug operator<<(QDebug, const Gazua::Token&);
 };
 

@@ -30,17 +30,50 @@ bool Gazua::API::access(const QString& key, const QString& secret) {
             else if(scopeString == "WITHDRAWL")
                 scope = scope | Token::WITHDRAWL;
         }
-        const auto expiration = jsonObj["expires_in"].toInt();
-        const auto accessToken = jsonObj["access_token"].toString();
-        const auto refreshToken = jsonObj["refresh_token"].toString();
-        m_token = Token(tokenType, scope, expiration, accessToken, refreshToken);
-        qDebug() << *m_token;
+        if(jsonObj["access_token"].isUndefined()) {
+            m_token = std::nullopt;
+            qDebug() << "Failed to get token";
+        } else {
+            const auto expiration = jsonObj["expires_in"].toInt();
+            const auto accessToken = jsonObj["access_token"].toString();
+            const auto refreshToken = jsonObj["refresh_token"].toString();
+            m_token = Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken};
+            qDebug() << m_token.value();
+        }
         reply->close();
         // reply->deleteLater(); not sure
     });
     return true;
 }
 
-bool Gazua::API::refresh() {
+bool Gazua::API::refresh(const QString& key, const QString& secret) {
+    if(!m_token.has_value() || !m_token.value().refreshToken().has_value())
+        return false;
+    QUrlQuery query;
+    query.addQueryItem("client_id", key);
+    query.addQueryItem("client_secret", secret);
+    query.addQueryItem("grant_type", "refresh_token");
+    query.addQueryItem("refresh_token", m_token.value().refreshToken().value());
+    QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    auto reply = m_qnam.post(request, query.query().toUtf8());
+    connect(reply, &QNetworkReply::finished, this, [this, reply] () {
+        const auto jsonObj = QJsonDocument::fromJson(reply->readAll()).object();
+        const auto tokenType = jsonObj["token_type"].toString() == "Bearer" ? TokenType::BEARER : TokenType::UNKNOWN;
+        const auto scopeStringList = jsonObj["scope"].toString().split(',', QString::SkipEmptyParts);
+        uint32_t scope = 0;
+        if(jsonObj["access_token"].isUndefined()) {
+            m_token = std::nullopt;
+            qDebug() << "Failed to get token";
+        } else {
+            const auto expiration = jsonObj["expires_in"].toInt();
+            const auto accessToken = jsonObj["access_token"].toString();
+            const auto refreshToken = jsonObj["refresh_token"].toString();
+            m_token = Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken};
+            qDebug() << m_token.value();
+        }
+        reply->close();
+        // reply->deleteLater(); not sure
+    });
     return true;
 }

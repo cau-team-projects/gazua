@@ -19,6 +19,12 @@ std::optional<QString> Gazua::Token::accessToken() {
     return std::optional<QString>{m_accessToken};
 }
 
+std::optional<QString> Gazua::Token::refreshToken() {
+    if(m_currentTime + m_expiration >= QDateTime::currentMSecsSinceEpoch())
+        return std::nullopt;
+    return std::optional<QString>{m_refreshToken};
+}
+
 QDebug Gazua::operator<<(QDebug debug, const Gazua::Token& token) {
     switch(token.m_tokenType) {
     case TokenType::UNKNOWN:
