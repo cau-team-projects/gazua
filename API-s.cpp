@@ -36,7 +36,7 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
     QJsonObject detailObject = QJsonDocument::fromJson(detailJson).object();
     QJsonObject constraintObject = QJsonDocument::fromJson(constraintJson).object().value("exchange").toObject();
 
-    foreach (const QString& coinKey, detailObject.keys()) {
+    for(const QString& coinKey : detailObject.keys()) {
     	
         if (coinInfos->contains(coinKey) == false) {
             CoinInfo newCoinInfo;
@@ -57,7 +57,7 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
 
     }
 
-    foreach (const QString& coinKey, constraintObject.keys()) {
+    for(const QString& coinKey : constraintObject.keys()) {
         QJsonObject coinObject = QJsonDocument::fromJson(coinKey.toUtf8()).object();
         coinInfos->find(coinKey).value().tick_size = constraintObject.value("tick_size").toDouble();
         coinInfos->find(coinKey).value().min_price = constraintObject.value("min_price").toDouble();
