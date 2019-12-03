@@ -39,8 +39,8 @@ QDebug Gazua::operator<<(QDebug debug, const Gazua::Token& token) {
         debug << "VIEW";
     if(token.m_scope & Token::TRADE)
         debug << "TRADE";
-    if(token.m_scope & Token::WITHDRAWL)
-        debug << "WITHDRAWL";
+    if(token.m_scope & Token::WITHDRAWAL)
+        debug << "WITHDRAWAL";
     debug.nospace() << "\n";
     debug.nospace() << "currentTime: " << token.m_currentTime << "\n";
     debug.nospace() << "expiration: " << token.m_expiration << "\n";
