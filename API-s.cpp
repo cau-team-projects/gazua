@@ -15,23 +15,25 @@
 
 bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinInfos) {
 
-    QUrl detailUrl("https://api.korbit.co.kr/v1/ticker/detailed/all");
-    QUrl constraintUrl("https://api.korbit.co.kr/v1/constants");
-    QByteArray detailJson;
-    QByteArray constraintJson;
+    QJsonObject detailObject;
+    QJsonObject constraintObject;
 
-    auto detailReply = m_qnam.get(QNetworkRequest{detailUrl});
-    connect(detailReply, &QNetworkReply::finished, this, [detailReply, &detailJson] () {
-        detailJson = detailReply->readAll();
+    QNetworkRequest detailRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}};
+    QNetworkReply *detailReply = m_qnam.get(detailRequest);
+    connect(detailReply, &QNetworkReply::finished, this, [this, detailReply, &detailObject] () {
+        detailObject = QJsonDocument::fromJson(detailReply->readAll()).object();
         detailReply->close();
         // detailReply->deleteLater(); not sure
     });
-    auto constraintReply = m_qnam.get(QNetworkRequest{constraintUrl});
-    connect(constraintReply, &QNetworkReply::finished, this, [constraintReply, &constraintJson] () {
-        constraintJson = constraintReply->readAll();
+    QNetworkRequest constraintRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}};
+    QNetworkReply *constraintReply = m_qnam.get(constraintRequest);
+    connect(constraintReply, &QNetworkReply::finished, this, [this, constraintReply, &constraintObject] () {
+        constraintObject = QJsonDocument::fromJson(constraintReply->readAll()).object();
         constraintReply->close();
         // constraintReply->deleteLater(); not sure
     });
+
+        /*
 
     QJsonObject detailObject = QJsonDocument::fromJson(detailJson).object();
     QJsonObject constraintObject = QJsonDocument::fromJson(constraintJson).object().value("exchange").toObject();
@@ -65,7 +67,7 @@ bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinI
         coinInfos->find(coinKey).value().order_min_size = constraintObject.value("order_min_size").toDouble();
         coinInfos->find(coinKey).value().order_max_size = constraintObject.value("order_max_size").toDouble();
     }
-    
+    */
     return true;
 }
 
