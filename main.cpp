@@ -23,9 +23,25 @@ int main(int argc, char *argv[])
 
     //engine.rootContext()->setContextProperty("coinModel", coinModel);
 
+    QFile apiKeyFile("apikey.txt");
+    if(!apiKeyFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "API KEY NOT FOUND!";
+        return 1;
+    }
+
+    QString key;
+    QString secret;
+
+    QTextStream apiKeyStream(&apiKeyFile);
+
+    if(!apiKeyStream.atEnd())
+        key = std::move(apiKeyStream.readLine());
+    if(!apiKeyStream.atEnd())
+        secret = std::move(apiKeyStream.readLine());
+
     QQuickView viewer;
     Gazua::API api;
-    api.access("key", "secret");
+    api.access(key, secret);
     //viewer.rootContext()->setContextProperty("api",&api);
     viewer.setSource(QUrl("qrc:/main.qml"));
     viewer.setTitle(QStringLiteral("GAZUA"));

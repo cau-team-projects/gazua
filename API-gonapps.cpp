@@ -32,7 +32,7 @@ bool Gazua::API::access(const QString& key, const QString& secret) {
         }
         if(jsonObj["access_token"].isUndefined()) {
             m_token = std::nullopt;
-            qDebug() << "Failed to get token";
+            qDebug() << "Failed to fetch token";
         } else {
             const auto expiration = jsonObj["expires_in"].toInt();
             const auto accessToken = jsonObj["access_token"].toString();
@@ -64,7 +64,7 @@ bool Gazua::API::refresh(const QString& key, const QString& secret) {
         uint32_t scope = 0;
         if(jsonObj["access_token"].isUndefined()) {
             m_token = std::nullopt;
-            qDebug() << "Failed to get token";
+            qDebug() << "Failed to fetch token";
         } else {
             const auto expiration = jsonObj["expires_in"].toInt();
             const auto accessToken = jsonObj["access_token"].toString();
