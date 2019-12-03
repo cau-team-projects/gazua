@@ -1,9 +1,11 @@
 #ifndef COINTREEMODEL_H
 #define COINTREEMODEL_H
 
+#include <memory>
 #include <QAbstractItemModel>
 #include <QString>
 #include <QVariant>
+#include "CoinInfo.h"
 #include "CoinTreeItem.h"
 
 namespace Gazua {
@@ -35,6 +37,8 @@ public:
     //bool removeColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) override;
     //bool insertRows(int position, int rows,  const QModelIndex &parent = QModelIndex()) override;
     //bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
+
+    bool appendCoinInfos(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> coinInfos);
 };
 
 #endif

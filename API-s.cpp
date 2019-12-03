@@ -15,10 +15,6 @@
 
 bool Gazua::API::refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinInfos) {
 
-    //qDebug() << coinInfos->value("mkr_krw").last;
-
-    //qDebug() << (coinInfos->find("mkr_krw"))->timestamp;
-
     QJsonObject detailObject;
     QJsonObject constraintObject;
 

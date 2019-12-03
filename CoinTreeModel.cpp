@@ -1,6 +1,6 @@
 #include <QModelIndex>
+#include <QDateTime>
 #include "CoinTreeModel.h"
-#include "CoinTreeItem.h"
 
 CoinTreeModel::CoinTreeModel(const QStringList &headers, const QString &data, QObject *parent) : QAbstractItemModel(parent) {
     QVector<QVariant> rootData;
@@ -81,3 +81,29 @@ Qt::ItemFlags CoinTreeModel::flags(const QModelIndex &index) const {
 //bool removeColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) override;
 //bool insertRows(int position, int rows,  const QModelIndex &parent = QModelIndex()) override;
 //bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
+
+bool CoinTreeModel::appendCoinInfos(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> coinInfos) {
+
+    /*
+    ** rootItem
+    ** └┬ item(QDateTime time)
+    **  └┬ item(QString coinName)
+    **   └─ item(Gazua::CoinInfo coinField)
+    */
+
+    rootItem->insertChildren(0, 1, 1);
+    CoinTreeItem *newCoinInfosItem = rootItem->child(rootItem->childCount() - 1);
+    newCoinInfosItem->setData(0, QDateTime::currentDateTime());
+
+    newCoinInfosItem->insertChildren(0, coinInfos->size(), 1);
+    for(int i = 0; i < newCoinInfosItem->childCount(); ++i) {
+        CoinTreeItem *newCoinItem = newCoinInfosItem->child(i);
+        newCoinItem->setData(0, coinInfos->keys().at(i));
+
+        newCoinItem->insertChildren(0, 1, 1);
+        CoinTreeItem *newCoinFields = newCoinItem->child(0);
+        newCoinFields->setData(0, QVariant::fromValue<Gazua::CoinInfo>(coinInfos->values().at(i)));
+    }
+
+    return true;
+}
