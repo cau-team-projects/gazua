@@ -12,7 +12,7 @@ namespace Gazua {
 class Gazua::CoinInfo {
 public:
     //ticker
-    std::time_t timestamp; //최종 체결 시각
+    long long timestamp; //최종 체결 시각
     double last,      //최종 체결 가격
             open,          //최근 24시간 시작 가격
             bid,           //매수호가

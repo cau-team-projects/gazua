@@ -2,7 +2,7 @@
 
 Gazua::CoinInfo::CoinInfo()
 {
-    timestamp = 0.0;
+    timestamp = 0;
     last = 0.0;
     open = 0.0;
     bid = 0.0;
