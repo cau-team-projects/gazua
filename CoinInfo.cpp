@@ -18,3 +18,7 @@ Gazua::CoinInfo::CoinInfo()
     order_min_size = 0.0;
     order_max_size = 0.0;
 }
+
+static const QVector<QString> allVars = {"timestamp", "last", "open", "bid", "ask",
+                                         "low", "high", "volume", "change", "changePercent",
+                                         "tick_size", "min_price", "max_price", "order_min_size", "order_max_size"};
