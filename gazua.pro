@@ -22,7 +22,8 @@ HEADERS += \
         Order.h \
         OrderType.h \
         Token.h \
-        TokenType.h
+        TokenType.h \
+        UserInfo.h
 
 SOURCES += \
         API-kms.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
         CoinModel.cpp \
         Order.cpp \
         Token.cpp \
+        UserInfo.cpp \
         main.cpp \
         API-gonapps.cpp
 

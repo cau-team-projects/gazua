@@ -14,15 +14,15 @@ Gazua::Token::Token(TokenType tokenType, uint32_t scope, uint32_t expiration, co
 }
 
 std::optional<QString> Gazua::Token::accessToken() {
-    if(m_currentTime + m_expiration >= QDateTime::currentMSecsSinceEpoch())
+    if(m_currentTime + m_expiration * 1000 <= QDateTime::currentMSecsSinceEpoch())
         return std::nullopt;
-    return std::optional<QString>{m_accessToken};
+    return std::make_optional(m_accessToken);
 }
 
 std::optional<QString> Gazua::Token::refreshToken() {
-    if(m_currentTime + m_expiration >= QDateTime::currentMSecsSinceEpoch())
+    if(m_currentTime + m_expiration * 1000 <= QDateTime::currentMSecsSinceEpoch())
         return std::nullopt;
-    return std::optional<QString>{m_refreshToken};
+    return std::make_optional(m_refreshToken);
 }
 
 QDebug Gazua::operator<<(QDebug debug, const Gazua::Token& token) {

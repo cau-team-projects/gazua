@@ -37,12 +37,16 @@ bool Gazua::API::access() {
             const auto expiration = jsonObj["expires_in"].toInt();
             const auto accessToken = jsonObj["access_token"].toString();
             const auto refreshToken = jsonObj["refresh_token"].toString();
-            m_token = Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken};
-            qDebug() << m_token.value();
+            m_token.emplace(Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken});
         }
         reply->close();
         // reply->deleteLater(); not sure
     });
+
+    QEventLoop loop;
+    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    loop.exec();
+
     return true;
 }
 
@@ -86,5 +90,9 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     const auto accessToken = m_token.value().accessToken().value();
     QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/user/balances"}};
     request.setRawHeader(QString{"Authorization"}.toUtf8(), QString{"Bearer %1"}.arg(accessToken).toUtf8());
+    auto reply = m_qnam.get(request);
+    connect(reply, &QNetworkReply::finished, this, [reply, userInfo] () {
+        qDebug() << reply->readAll();
+    });
     return true;
 }

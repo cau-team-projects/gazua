@@ -7,6 +7,7 @@
 #include <QQmlContext>
 #include "API.h"
 #include "CoinModel.h"
+#include "UserInfo.h"
 
 int main(int argc, char *argv[])
 {
@@ -42,6 +43,9 @@ int main(int argc, char *argv[])
     QQuickView viewer;
     Gazua::API api{std::move(key), std::move(secret)};
     api.access();
+    auto userInfo = std::make_shared<Gazua::UserInfo>();
+    api.refreshUserInfo(userInfo);
+
     //viewer.rootContext()->setContextProperty("api",&api);
     viewer.setSource(QUrl("qrc:/main.qml"));
     viewer.setTitle(QStringLiteral("GAZUA"));
