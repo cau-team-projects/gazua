@@ -3,16 +3,11 @@
 
 #include <cstdint>
 
-
 namespace Gazua {
-
     enum class TokenType : uint8_t {
         BEARER,
         UNKNOWN
     };
-
 };
-
-
 
 #endif
