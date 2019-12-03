@@ -96,11 +96,11 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
         const auto root = QJsonDocument::fromJson(reply->readAll()).object();
         for(const auto& coinName : root.keys()) {
              qDebug() << coinName << ">>>>>>>>>>>>>>>>";
-             qDebug() << "available: " << root[coinName]["available"].toDouble();
-             qDebug() << "trade_in_use: " << root[coinName]["trade_in_use"].toDouble();
-             qDebug() << "withdrawal_in_use: " << root[coinName]["withdrawal"].toDouble();
-             qDebug() << "avg_price: " << root[coinName]["avg_price"].toInt();
-             qDebug() << "avg_price_updated_at: " << root[coinName]["avg_price_updated_at"].toInt();
+             qDebug() << "available: " << root[coinName]["available"].toString().toDouble();
+             qDebug() << "trade_in_use: " << root[coinName]["trade_in_use"].toString().toDouble();
+             qDebug() << "withdrawal_in_use: " << root[coinName]["withdrawal"].toString().toDouble();
+             qDebug() << "avg_price: " << root[coinName]["avg_price"].toString().toDouble();
+             qDebug() << "avg_price_updated_at: " << root[coinName]["avg_price_updated_at"].toDouble();
         }
     });
     return true;

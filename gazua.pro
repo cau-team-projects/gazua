@@ -25,7 +25,8 @@ HEADERS += \
         OrderType.h \
         Token.h \
         TokenType.h \
-        UserInfo.h
+        UserInfo.h \
+        Volume.h
 
 SOURCES += \
         API-kms.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
         Order.cpp \
         Token.cpp \
         UserInfo.cpp \
+        Volume.h \
         main.cpp \
         API-gonapps.cpp
 
