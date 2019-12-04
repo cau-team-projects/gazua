@@ -14,28 +14,38 @@ int OrderModel::columnCount(const QModelIndex &parent) const {
     return 13;
 }
 
+QVariant OrderModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::DisplayRole)
+        return orderList[index.row()][index.column()];
+    else
+        return QVariant();
+}
+
 bool OrderModel::append(const QModelIndex &parent, std::shared_ptr<QMap<uint64_t, Gazua::Order>> orders) {
     int cols = columnCount();
 
     beginInsertRows(parent, 0, orders->size());
 
     for(auto row = orders->begin(); row != orders->end(); row++) {
-       order tmp;
-       for(int col = 0; col < cols; col++) {
-           tmp.id = QString::number(row.key());
-           tmp.currency_pair = row->currency_pair;
-           tmp.side = row->side;
-           tmp.avg_price = QString::number(row->avg_price);
-           tmp.price = QString::number(row->price);
-           tmp.order_amount = QString::number((double)row->order_amount);
-           tmp.filled_amount = QString::number((double)row->filled_amount);
-           tmp.order_total = QString::number(row->order_total);
-           tmp.filled_total = QString::number(row->filled_total);
-           tmp.created_at = QString::number(row->created_at);
-           tmp.last_filled_at = QString::number(row->last_filled_at);
-           tmp.status = row->status;
-           tmp.fee = QString::number((double)row->fee);
-       }
+       QStringList tmp;
+       tmp.append(QString::number(row.key()));
+       tmp.append(row->currency_pair);
+       tmp.append(row->side);
+       tmp.append(QString::number(row->avg_price));
+       tmp.append(QString::number(row->price));
+       tmp.append(QString::number((double)row->order_amount));
+       tmp.append(QString::number((double)row->filled_amount));
+       tmp.append(QString::number(row->order_total));
+       tmp.append(QString::number(row->filled_total));
+       tmp.append(QString::number(row->created_at));
+       tmp.append(QString::number(row->last_filled_at));
+       tmp.append(row->status);
+       tmp.append(QString::number((double)row->fee));
+
        orderList.push_back(tmp);
     }
     endInsertRows();

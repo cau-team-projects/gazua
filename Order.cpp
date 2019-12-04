@@ -1,8 +1,8 @@
 #include "API.h"
 
-Gazua::Order::Order(QString _currency_pair, QString _side, uint64_t _avg_price, uint64_t _price, long double _order_amount,
-                    long double _filled_amount, uint64_t _order_total, uint64_t _filled_total, uint64_t _created_at,
-                    uint64_t _last_filled_at, QString _status, long double _fee){
+Gazua::Order::Order(QString& _currency_pair, QString& _side, quint64 _avg_price, quint64 _price, qreal _order_amount,
+                    qreal _filled_amount, quint64 _order_total, quint64 _filled_total, quint64 _created_at,
+                    quint64 _last_filled_at, QString& _status, qreal _fee){
     currency_pair=_currency_pair;
     side = _side;
     avg_price = _avg_price;
