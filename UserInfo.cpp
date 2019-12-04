@@ -13,3 +13,11 @@ const QMap<QString, Balance>& UserInfo::balances() const {
 QMap<QString, Balance>& UserInfo::balances() {
     return m_balances;
 }
+
+const QMap<QString, Volume>& UserInfo::volumes() const {
+    return m_volumes;
+}
+
+QMap<QString, Volume>& UserInfo::volumes() {
+    return m_volumes;
+}
