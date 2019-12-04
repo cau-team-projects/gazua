@@ -17,6 +17,8 @@ public:
     explicit UserInfo();
     const QMap<QString, Balance>& balances() const;
     QMap<QString, Balance>& balances();
+    const QMap<QString, Volume>& volumes() const;
+    QMap<QString, Volume>& volumes();
 };
 
 #endif
