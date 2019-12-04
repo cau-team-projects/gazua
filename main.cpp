@@ -1,4 +1,3 @@
-
 #include <QtGui/QGuiApplication>
 #include <QtCore/QDir>
 #include <QtQuick/QQuickView>
@@ -34,15 +33,13 @@ int main(int argc, char *argv[])
     api.access();
     auto userInfo = std::make_shared<Gazua::UserInfo>();
     api.refreshUserInfo(userInfo);
+/*
     auto coinInfos = std::make_shared<QMap<QString, Gazua::CoinInfo>>();
     api.refreshCoinInfos(coinInfos);
+*/
 
-    //viewer.rootContext()->setContextProperty("api",&api);
-    viewer.setSource(QUrl("qrc:/main.qml"));
-    viewer.setTitle(QStringLiteral("GAZUA"));
-    viewer.setResizeMode(QQuickView::SizeRootObjectToView);
-    viewer.setColor(QColor("#FCFCFC"));
-    viewer.show();
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();
 }
