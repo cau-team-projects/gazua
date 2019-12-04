@@ -6,6 +6,22 @@ using namespace Gazua;
 
 UserInfo::UserInfo() {}
 
+quint64 UserInfo::total_volume() {
+    return m_total_volume;
+}
+
+void UserInfo::total_volume(quint64 val) {
+    m_total_volume = val;
+}
+
+quint64 UserInfo::timestamp() {
+    return m_timestamp;
+}
+
+void UserInfo::timestamp(quint64 val) {
+    m_timestamp = val; 
+}
+
 const QMap<QString, Balance>& UserInfo::balances() const {
     return m_balances;
 }

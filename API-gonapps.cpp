@@ -14,9 +14,9 @@ bool Gazua::API::access() {
     query.addQueryItem("client_id", m_key);
     query.addQueryItem("client_secret", m_secret);
     query.addQueryItem("grant_type", "client_credentials");
-    QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    auto reply = m_qnam.post(request, query.query().toUtf8());
+    QNetworkRequest req{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
+    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    auto reply = m_qnam.post(req, query.query().toUtf8());
     connect(reply, &QNetworkReply::finished, this, [this, reply] () {
         const auto root = QJsonDocument::fromJson(reply->readAll()).object();
         const auto tokenType = root["token_type"].toString() == "Bearer" ? TokenType::BEARER : TokenType::UNKNOWN;
@@ -59,9 +59,9 @@ bool Gazua::API::refresh() {
     query.addQueryItem("client_secret", m_secret);
     query.addQueryItem("grant_type", "refresh_token");
     query.addQueryItem("refresh_token", m_token.value().refreshToken().value());
-    QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    auto reply = m_qnam.post(request, query.query().toUtf8());
+    QNetworkRequest req{QUrl{"https://api.korbit.co.kr/v1/oauth2/access_token"}};
+    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    auto reply = m_qnam.post(req, query.query().toUtf8());
     connect(reply, &QNetworkReply::finished, this, [this, reply] () {
         const auto root = QJsonDocument::fromJson(reply->readAll()).object();
         const auto tokenType = root["token_type"].toString() == "Bearer" ? TokenType::BEARER : TokenType::UNKNOWN;
@@ -89,28 +89,50 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     if(!m_token.has_value() || !m_token.value().accessToken().has_value())
         return false;
     const auto accessToken = m_token.value().accessToken().value();
-    QNetworkRequest request{QUrl{"https://api.korbit.co.kr/v1/user/balances"}};
-    request.setRawHeader(QString{"Authorization"}.toUtf8(), QString{"Bearer %1"}.arg(accessToken).toUtf8());
-    auto reply = m_qnam.get(request);
-    connect(reply, &QNetworkReply::finished, this, [reply, userInfo] () {
-        const auto root = QJsonDocument::fromJson(reply->readAll()).object();
+    QNetworkRequest balancesReq{std::move(QUrl{"https://api.korbit.co.kr/v1/user/balances"})};
+    balancesReq.setRawHeader(QString{"Authorization"}.toUtf8(), QString{"Bearer %1"}.arg(accessToken).toUtf8());
+    auto balancesReply = m_qnam.get(balancesReq);
+    connect(balancesReply, &QNetworkReply::finished, this, [balancesReply, userInfo] () {
+        const auto root = QJsonDocument::fromJson(balancesReply->readAll()).object();
         for(const auto& coinName : root.keys()) {
-
              auto& balances = userInfo->balances();
-
              auto& balance = balances[coinName];
              balance.available = root[coinName]["available"].toString().toDouble();
              balance.trade_in_use = root[coinName]["trade_in_use"].toString().toDouble();
              balance.withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(); 
              balance.avg_price = root[coinName]["avg_price"].toString().toDouble();
-             balance.avg_price_updated_at = root[coinName]["avg_price_updated_at"].toDouble();
-
+             balance.avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble());
              qDebug() << coinName << ">>>>>>>>>>>>>>>>";
              qDebug() << "available: " << balance.available;
              qDebug() << "trade_in_use: " << balance.trade_in_use;
              qDebug() << "withdrawal_in_use: " << balance.withdrawal_in_use;
              qDebug() << "avg_price: " << balance.avg_price;
              qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
+        }
+    });
+    QNetworkRequest volumesReq{std::move(QUrl{"https://api.korbit.co.kr/v1/user/volume"})};
+    volumesReq.setRawHeader(QString{"Authorization"}.toUtf8(), QString{"Bearer %1"}.arg(accessToken).toUtf8());
+    auto volumesReply = m_qnam.get(volumesReq);
+    connect(volumesReply, &QNetworkReply::finished, this, [volumesReply, userInfo] () {
+        auto data = volumesReply->readAll();
+        qDebug() << data;
+        const auto root = QJsonDocument::fromJson(std::move(data)).object();
+        userInfo->total_volume(static_cast<quint64>(root["total_volume"].toDouble()));
+        userInfo->timestamp(static_cast<quint64>(root["timestamp"].toDouble()));
+        qDebug() << "total_volume: " << userInfo->total_volume();
+        qDebug() << "timestamp: " << userInfo->timestamp();
+
+        for(const auto& coinName : root.keys()) {
+            auto& volumes = userInfo->volumes();
+            auto& volume = volumes[coinName];
+            volume.volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong());
+            volume.maker_fee = root[coinName]["maker_fee"].toString().toDouble();
+            volume.taker_fee = root[coinName]["taker_fee"].toString().toDouble(); 
+
+            qDebug() << coinName << ">>>>>>>>>>>>>>>>";
+            qDebug() << "volume: " << volume.volume;
+            qDebug() << "maker_fee: " << volume.maker_fee;
+            qDebug() << "taker_fee: " << volume.taker_fee;
         }
     });
     return true;
