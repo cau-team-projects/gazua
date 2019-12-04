@@ -6,7 +6,7 @@
 #include <QJsonDocument>
 
 bool Gazua::API::getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const QString& coinName, const QVector<uint64_t>& ids, uint64_t limit){
-
+/*
     QUrlQuery qUrl;
     QString tmp("");
     qUrl.addQueryItem("currency_pair", coinName);
@@ -44,6 +44,6 @@ bool Gazua::API::getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const 
         }
         reply->close();
     });
-
+*/
     return true;
 }

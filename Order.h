@@ -5,7 +5,7 @@
 #include "API.h"
 
 namespace Gazua {
-    class Order;
+    struct Order;
 };
 
 struct Gazua::Order {

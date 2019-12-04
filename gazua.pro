@@ -21,8 +21,6 @@ HEADERS += \
         CoinModel.h \
         CoinTreeItem.h \
         CoinTreeModel.h \
-        Order.h \
-        OrderModel.h \
         OrderType.h \
         Token.h \
         TokenType.h \
@@ -36,8 +34,6 @@ SOURCES += \
         CoinModel.cpp \
         CoinTreeItem.cpp \
         CoinTreeModel.cpp \
-        Order.cpp \
-        OrderModel.cpp \
         Token.cpp \
         UserInfo.cpp \
         Volume.h \
