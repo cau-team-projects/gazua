@@ -10,6 +10,7 @@
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QString>
+#include <QTableView>
 #include "AmountType.h"
 #include "Order.h"
 #include "OrderType.h"
