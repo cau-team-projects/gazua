@@ -97,7 +97,7 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
         for(const auto& coinName : root.keys()) {
              userInfo->balance(
                  coinName,
-                 {
+                 (struct Balance) {
                      .available = root[coinName]["available"].toString().toDouble(),
                      .trade_in_use = root[coinName]["trade_in_use"].toString().toDouble(),
                      .withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(),
@@ -131,7 +131,7 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
         for(const auto& coinName : root.keys()) {
             userInfo->volume(
                 coinName,
-                {
+                (struct Volume) {
                     .volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong()),
                     .maker_fee = root[coinName]["maker_fee"].toString().toDouble(),
                     .taker_fee = root[coinName]["taker_fee"].toString().toDouble()
