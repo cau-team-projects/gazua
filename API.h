@@ -13,6 +13,7 @@
 #include <QTableView>
 #include "AmountType.h"
 #include "Order.h"
+#include "OrderModel.h"
 #include "OrderType.h"
 #include "Token.h"
 #include "TokenType.h"
@@ -52,7 +53,7 @@ public:
     bool cancel(const QString& coinName, const QVector<uint64_t>& ids);
 
     // GET https://api.korbit.co.kr/v1/user/orders
-    bool getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const QString& coinName, const QVector<uint64_t>& ids, uint64_t limit = 10);
+    bool getOrders(std::shared_ptr<OrderModel> orderModel);
 };
 
 #endif
