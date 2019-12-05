@@ -9,59 +9,64 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QMap>
 #include <QString>
 #include "API.h"
 
-bool Gazua::API::refreshCoinInfos(std::shared_ptr<QVariantMap> coinInfos) {
+bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinInfoModel> coinInfoModel) {
 
     QJsonObject detailObject;
     QJsonObject constraintObject;
 
     QNetworkRequest detailRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}};
     QNetworkReply *detailReply = m_qnam.get(detailRequest);
-    connect(detailReply, &QNetworkReply::finished, this, [this, detailReply, coinInfos] () {
+    connect(detailReply, &QNetworkReply::finished, this, [this, detailReply, coinInfoModel] () {
         QJsonObject detailObject = QJsonDocument::fromJson(detailReply->readAll()).object();
 
-        for(const QString& coinKey : detailObject.keys()) {
-            QVariantMap refreshedCoinInfo;
+        QVariantMap coinInfo = coinInfoModel->getCoinInfo();
 
-            for(const QString& fieldKey : detailObject[coinKey].toObject().keys()) {
-                refreshedCoinInfo[fieldKey] = detailObject.value(coinKey).toObject().value(fieldKey).toVariant();
-                //qDebug() << refreshedCoinInfo[fieldKey];
+        for(const QString& coinName : detailObject.keys()) {
+
+            QVariantMap coinFields;
+            if (!coinInfo.contains(coinName)) coinFields.insert(coinName, QVariant());
+            else coinFields = qvariant_cast<QVariantMap>(coinInfo[coinName]);
+
+            for(const QString& fieldName : detailObject[coinName].toObject().keys()) {
+
+                if (!coinFields.contains(fieldName)) coinFields.insert(fieldName, detailObject.value(coinName).toObject().value(fieldName).toVariant());
+                else coinFields[fieldName] = detailObject.value(coinName).toObject().value(fieldName).toVariant();
             }
-            coinInfos->remove(coinKey);
-            coinInfos->insert(coinKey, refreshedCoinInfo);
-        }
-        qDebug() << "------------------------------apitest--------------------------";
-        qDebug() << qvariant_cast<QVariantMap>(coinInfos->value("btc_krw")).keys();
-        qDebug() << "------------------------------testend--------------------------";
 
+        }
         detailReply->close();
         // detailReply->deleteLater(); not sure
     });
 
     QNetworkRequest constraintRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}};
     QNetworkReply *constraintReply = m_qnam.get(constraintRequest);
-    connect(constraintReply, &QNetworkReply::finished, this, [this, constraintReply, coinInfos] () {
+    connect(constraintReply, &QNetworkReply::finished, this, [this, constraintReply, coinInfoModel] () {
         QJsonObject constraintObject = QJsonDocument::fromJson(constraintReply->readAll()).object()["exchange"].toObject();
 
-        for(const QString& coinKey : constraintObject.keys()) {
-            QVariantMap refreshedCoinInfo;
-            if (coinInfos->contains(coinKey) == true) refreshedCoinInfo = qvariant_cast<QVariantMap>(coinInfos->value(coinKey));
-            for(const QString& fieldKey : constraintObject[coinKey].toObject().keys()) {
-                if (qvariant_cast<QVariantMap>(coinInfos->value(coinKey)).contains(fieldKey) == true) refreshedCoinInfo.insert(fieldKey, constraintObject.value(coinKey).toObject().value(fieldKey).toVariant());
-                else refreshedCoinInfo[fieldKey] = constraintObject.value(coinKey).toObject().value(fieldKey).toVariant();
+        QVariantMap coinInfo = coinInfoModel->getCoinInfo();
+
+        for(const QString& coinName : constraintObject.keys()) {
+
+            QVariantMap coinFields;
+            if (!coinInfo.contains(coinName)) coinFields.insert(coinName, QVariant());
+            else coinFields = qvariant_cast<QVariantMap>(coinInfo[coinName]);
+
+            for(const QString& fieldName : constraintObject[coinName].toObject().keys()) {
+
+                if (!coinFields.contains(fieldName)) coinFields.insert(fieldName, constraintObject.value(coinName).toObject().value(fieldName).toVariant());
+                else coinFields[fieldName] = constraintObject.value(coinName).toObject().value(fieldName).toVariant();
             }
-            coinInfos->remove(coinKey);
-            coinInfos->insert(coinKey, refreshedCoinInfo);
+
         }
         constraintReply->close();
         // constraintReply->deleteLater(); not sure
     });
 
     //qDebug() << "------------------------------test-----------------------------";
-    //qDebug() << qvariant_cast<QVariantMap>(coinInfos->value("btc_krw")).keys();
+    //qDebug() << qvariant_cast<QVariantMap>(coinInfo->getCoinInfo().value("btc_krw")).keys();
     //qDebug() << "------------------------------testend--------------------------";
 
     return true;

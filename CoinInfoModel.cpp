@@ -1,13 +1,11 @@
-#include "API.h"
 #include "CoinInfoModel.h"
 
-CoinInfoModel::CoinInfoModel(QObject *parent) : QAbstractTableModel(parent) {
-    coinInfoModel = nullptr;
-}
+using namespace Gazua;
+
+CoinInfoModel::CoinInfoModel(QObject* parent) : QAbstractTableModel{parent} {}
 
 int CoinInfoModel::rowCount(const QModelIndex& parent) const {
-    if (coinInfoModel) return coinInfoModel->count();
-    else return 0;
+    return coinInfo.count();
 }
 
 int CoinInfoModel::columnCount(const QModelIndex & parent) const {
@@ -15,6 +13,15 @@ int CoinInfoModel::columnCount(const QModelIndex & parent) const {
 }
 
 QVariant CoinInfoModel::data(const QModelIndex& index, int role) const {
+
+    if (role == Qt::DisplayRole) {
+       return QString(coinInfo.keys().at(index.row()) + ", " + qvariant_cast<QVariantMap>(coinInfo.values().at(index.row())).value("test").toString()) //  + "Row%1, Column%2"
+                   .arg(index.row() + 1)
+                   .arg(index.column() +1);
+    }
+    else return QVariant();
+
+    /*
     if      (!coinInfoModel)                                                                      return QVariant();
     else if (index.row() < 0 || index.row() >= coinInfoModel->count() || role != Qt::DisplayRole) return QVariant();
 
@@ -22,23 +29,37 @@ QVariant CoinInfoModel::data(const QModelIndex& index, int role) const {
     else if (index.column() == 1) return coinInfoModel->values().at(index.row());
 
     else return QVariant();
+    */
+
 }
 
-void CoinInfoModel::append(QString newCoinName, QVariantMap newCoinFields) {
-    coinInfoModel->insert(newCoinName, newCoinFields);
+const QVariantMap& CoinInfoModel::getCoinInfo() const {
+    return coinInfo;
+}
+
+bool CoinInfoModel::contains(QString coinName) const {
+    return coinInfo.contains(coinName);
+}
+
+QVariantMap::iterator CoinInfoModel::findCoinField(QString coinName) {
+    return coinInfo.find(coinName);
+}
+
+void CoinInfoModel::append(QString coinName, QVariantMap coinFields) {
+    coinInfo.insert(coinName, coinFields);
     return;
 }
 
 void CoinInfoModel::remove(QString coinName) {
-    coinInfoModel->remove(coinName);
+    coinInfo.remove(coinName);
     return;
 }
 
 QHash<int, QByteArray> CoinInfoModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[KeyRole] = "key";
-    roles[ValueRole] = "value";
+    roles[NameRole] = "name";
+    roles[FieldRole] = "field";
     return roles;
 }
 
