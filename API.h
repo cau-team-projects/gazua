@@ -11,11 +11,11 @@
 #include <QObject>
 #include <QString>
 #include "AmountType.h"
-#include "CoinInfo.h"
 #include "Order.h"
 #include "OrderType.h"
 #include "Token.h"
 #include "TokenType.h"
+#include "CoinInfoModel.h"
 #include "UserInfo.h"
 
 namespace Gazua {
@@ -36,7 +36,7 @@ public:
     bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
-    bool refreshCoinInfos(std::shared_ptr<QVariantMap> coinInfos);
+    bool refreshCoinInfo(std::shared_ptr<CoinInfoModel> coinInfoModel);
 
     // GET https://api.korbit.co.kr/v1/user/balances
     // GET https://api.korbit.co.kr/v1/user/volume

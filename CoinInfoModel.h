@@ -1,21 +1,18 @@
-#ifndef COININFOMODEL_H
-#define COININFOMODEL_H
+#ifndef COIN_INFO_MODEL_H
+#define COIN_INFO_MODEL_H
 
 #include <QAbstractTableModel>
-#include <QString>
 #include <QMap>
-#include <QTimer>
-#include "CoinInfo.h"
 
 namespace Gazua {
     class CoinInfoModel;
 };
 
-class CoinInfoModel : public QAbstractTableModel {
+class Gazua::CoinInfoModel : public QAbstractTableModel {
     Q_OBJECT
 
 private:
-    QVariantMap *coinInfoModel;
+    QVariantMap coinInfo;
 
 public:
     enum MapRoles {
@@ -27,12 +24,15 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    const QVariantMap& getCoinInfo() const;
+    bool contains(QString coinName) const;
+    QVariantMap::iterator findCoinField(QString coinName);
     int count() const;
 
 public slots:
-    void append(QString newCoinName, QVariantMap newCoinFields);
-    void remove(QString index);
-    void setMap(QVariantMap *coinInfoModel) { this->coinInfoModel = coinInfoModel; }
+    void append(QString coinName, QVariantMap coinFields);
+    void remove(QString coinName);
+    void setMap(QVariantMap coinInfo) { this->coinInfo = coinInfo; }
     QHash<int, QByteArray> roleNames() const;
 signals:
     void countChanged(int count);

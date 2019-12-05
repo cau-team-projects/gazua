@@ -37,22 +37,22 @@ int main(int argc, char *argv[])
     auto userInfo = std::make_shared<Gazua::UserInfo>();
 //    api.refreshUserInfo(userInfo);
 
+    auto coinInfoModel = std::make_shared<Gazua::CoinInfoModel>();
+    api.refreshCoinInfo(coinInfoModel);
 
-    auto coinInfos = std::make_shared<QVariantMap>();
-    api.refreshCoinInfos(coinInfos);
-
-    qDebug() << "------------------------------maintest-------------------------";
-    qDebug() << qvariant_cast<QVariantMap>(coinInfos->value("btc_krw")).keys();
-    qDebug() << "------------------------------testend--------------------------";
+    //qDebug() << "------------------------------maintest-------------------------";
+    //qDebug() << qvariant_cast<QVariantMap>(coinInfo->getCoinInfo().value("btc_krw")).keys();
+    //qDebug() << "------------------------------testend--------------------------";
 
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
-    //context->setContextProperty("userInfo", userInfo.get());
-    context->setContextProperty("coinInfos", *coinInfos);
+    context->setContextProperty("userInfo", userInfo.get());
+    //context->setContextProperty("coinInfos", coinInfo.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     QTreeView view;
-    view.setModel(userInfo.get());
+    //view.setModel(userInfo.get());
+    view.setModel(coinInfoModel.get());
     view.setWindowTitle(QObject::tr("hello"));
     view.show();
 
