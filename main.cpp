@@ -8,6 +8,8 @@
 #include <QApplication>
 #include "API.h"
 #include "CoinInfoModel.h"
+#include "CoinTreeModel.h"
+#include "CoinTreeItem.h"
 #include "UserInfo.h"
 
 int main(int argc, char *argv[])
@@ -36,23 +38,21 @@ int main(int argc, char *argv[])
     auto userInfo = std::make_shared<Gazua::UserInfo>();
     api.refreshUserInfo(userInfo);
 
-    auto coinInfoModel = std::make_shared<Gazua::CoinInfoModel>();
-    api.refreshCoinInfo(coinInfoModel);
+    QStringList coinInfoModelHeader;
+    coinInfoModelHeader << "1" << "2" << "3";
 
-    QVariantMap dummyQMap;
-    dummyQMap.insert("test", QString::fromStdString("test field value"));
-    coinInfoModel->append("test name", dummyQMap);
-    coinInfoModel->append("test name 2", dummyQMap);
+    auto coinTreeModel = std::make_shared<Gazua::CoinTreeModel>(coinInfoModelHeader, QString(), nullptr);
+    api.refreshCoinInfo(coinTreeModel);
 
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
     //context->setContextProperty("userInfo", userInfo.get());
-    context->setContextProperty("coinInfoModel", coinInfoModel.get());
+    context->setContextProperty("coinTreeModel", coinTreeModel.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     QTreeView view;
     //view.setModel(userInfo.get());
-    view.setModel(coinInfoModel.get());
+    view.setModel(coinTreeModel.get());
     view.setWindowTitle(QObject::tr("hello"));
     view.show();
 

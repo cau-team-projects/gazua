@@ -16,6 +16,8 @@
 #include "Token.h"
 #include "TokenType.h"
 #include "CoinInfoModel.h"
+#include "CoinTreeModel.h"
+#include "CoinTreeItem.h"
 #include "UserInfo.h"
 
 namespace Gazua {
@@ -36,7 +38,7 @@ public:
     bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
-    bool refreshCoinInfo(std::shared_ptr<CoinInfoModel> coinInfoModel);
+    bool refreshCoinInfo(std::shared_ptr<CoinTreeModel> coinInfoModel);
 
     // GET https://api.korbit.co.kr/v1/user/balances
     // GET https://api.korbit.co.kr/v1/user/volume

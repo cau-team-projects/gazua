@@ -1,5 +1,5 @@
-#ifndef COINTREEITEM_H
-#define COINTREEITEM_H
+#ifndef COIN_TREE_ITEM_H
+#define COIN_TREE_ITEM_H
 
 #include <QVector>
 #include <QVariant>
@@ -8,7 +8,7 @@ namespace Gazua {
     class CoinTreeItem;
 };
 
-class CoinTreeItem
+class Gazua::CoinTreeItem
 {
 private:
     QVector<CoinTreeItem*> childItems;

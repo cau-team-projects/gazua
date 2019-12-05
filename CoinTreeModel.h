@@ -1,5 +1,5 @@
-#ifndef COINTREEMODEL_H
-#define COINTREEMODEL_H
+#ifndef COIN_TREE_MODEL_H
+#define COIN_TREE_MODEL_H
 
 #include <memory>
 #include <QAbstractItemModel>
@@ -12,17 +12,17 @@ namespace Gazua {
     class CoinTreeModel;
 };
 
-class CoinTreeModel : public QAbstractItemModel {
-    Q_OBJECT
+class Gazua::CoinTreeModel : public QAbstractItemModel {
+Q_OBJECT
 
 private:
     CoinTreeItem *rootItem;
-    CoinTreeItem *getItem(const QModelIndex &index) const;
 
 public:
     CoinTreeModel(const QStringList &headers, const QString &data, QObject *parent = nullptr);
     ~CoinTreeModel() override;
 
+    CoinTreeItem *getItem(const QModelIndex &index) const;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -31,14 +31,13 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
-    //bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-    //bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
-    //bool insertColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) override;
-    //bool removeColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) override;
-    //bool insertRows(int position, int rows,  const QModelIndex &parent = QModelIndex()) override;
-    //bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
-
-    //bool appendCoinInfos(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> coinInfos);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
+    bool insertColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) override;
+    bool removeColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) override;
+    bool insertRows(int position, int rows,  const QModelIndex &parent = QModelIndex()) override;
+    bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
+    void setupModelData(const QStringList &lines, CoinTreeItem *parent);
 };
 
 #endif

@@ -1,6 +1,8 @@
 #include "API.h"
 #include "CoinTreeItem.h"
 
+using namespace Gazua;
+
 CoinTreeItem::CoinTreeItem(const QVector<QVariant> &data, CoinTreeItem *parent) : itemData(data), parentItem(parent) {}
 
 CoinTreeItem::~CoinTreeItem() { qDeleteAll(childItems); }
@@ -61,3 +63,12 @@ bool CoinTreeItem::insertColumns(int position, int columns) {
     return true;
 }
 
+bool CoinTreeItem::removeColumns(int position, int columns) {
+    if (position < 0 || position > itemData.size()) return false;
+
+    for (int column = 0; column < columns; ++column)
+        itemData.remove(position);
+    for (CoinTreeItem *child : qAsConst(childItems))
+        child->insertColumns(position, columns);
+    return true;
+}

@@ -20,17 +20,6 @@ QVariant CoinInfoModel::data(const QModelIndex& index, int role) const {
                    .arg(index.column() +1);
     }
     else return QVariant();
-
-    /*
-    if      (!coinInfoModel)                                                                      return QVariant();
-    else if (index.row() < 0 || index.row() >= coinInfoModel->count() || role != Qt::DisplayRole) return QVariant();
-
-    else if (index.column() == 0) return coinInfoModel->keys().at(index.row());
-    else if (index.column() == 1) return coinInfoModel->values().at(index.row());
-
-    else return QVariant();
-    */
-
 }
 
 const QVariantMap& CoinInfoModel::getCoinInfo() const {
