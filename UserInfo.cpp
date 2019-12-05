@@ -28,8 +28,7 @@ int UserInfo::rowCount(const QModelIndex &parent) const {
         return 0;
     }
     qDebug() << "rowCount" << 10;
-    return 10;
-    //return m_balances.size();
+    return m_balances.size();
 }
 
 int UserInfo::columnCount(const QModelIndex &parent) const {
@@ -51,9 +50,9 @@ QVariant UserInfo::data(const QModelIndex &index, int role) const {
     if(role != Qt::DisplayRole)
         return QVariant{};
 
-    qDebug() << "data" << index.row() << index.column() << QVariant{100};
+    qDebug() << "data" << index.row() << index.column() << m_balances[m_balances.keys().at(index.row())].avg_price_updated_at;
 
-    return QVariant{100};
+    return m_balances[m_balances.keys().at(index.row())].avg_price_updated_at;
 }
 
 Qt::ItemFlags UserInfo::flags(const QModelIndex &index) const {
