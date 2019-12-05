@@ -23,8 +23,10 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
-    explicit UserInfo();
+    explicit UserInfo(QObject* parent = nullptr);
     quint64 total_volume();
     void total_volume(quint64);
     quint64 timestamp();

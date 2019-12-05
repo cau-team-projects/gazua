@@ -102,12 +102,14 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
              balance.withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(); 
              balance.avg_price = root[coinName]["avg_price"].toString().toDouble();
              balance.avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble());
+/*
              qDebug() << coinName << ">>>>>>>>>>>>>>>>";
              qDebug() << "available: " << balance.available;
              qDebug() << "trade_in_use: " << balance.trade_in_use;
              qDebug() << "withdrawal_in_use: " << balance.withdrawal_in_use;
              qDebug() << "avg_price: " << balance.avg_price;
              qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
+*/
         }
     });
     QNetworkRequest volumesReq{std::move(QUrl{"https://api.korbit.co.kr/v1/user/volume"})};
@@ -115,12 +117,13 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     auto volumesReply = m_qnam.get(volumesReq);
     connect(volumesReply, &QNetworkReply::finished, this, [volumesReply, userInfo] () {
         auto data = volumesReply->readAll();
-        qDebug() << data;
         const auto root = QJsonDocument::fromJson(std::move(data)).object();
         userInfo->total_volume(static_cast<quint64>(root["total_volume"].toDouble()));
         userInfo->timestamp(static_cast<quint64>(root["timestamp"].toDouble()));
+/*
         qDebug() << "total_volume: " << userInfo->total_volume();
         qDebug() << "timestamp: " << userInfo->timestamp();
+*/
 
         for(const auto& coinName : root.keys()) {
             auto& volumes = userInfo->volumes();
@@ -128,11 +131,12 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
             volume.volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong());
             volume.maker_fee = root[coinName]["maker_fee"].toString().toDouble();
             volume.taker_fee = root[coinName]["taker_fee"].toString().toDouble(); 
-
+/*
             qDebug() << coinName << ">>>>>>>>>>>>>>>>";
             qDebug() << "volume: " << volume.volume;
             qDebug() << "maker_fee: " << volume.maker_fee;
             qDebug() << "taker_fee: " << volume.taker_fee;
+*/
         }
     });
     return true;

@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QModelIndex>
 #include <QVariant>
 #include "Balance.h"
@@ -6,10 +7,15 @@
 
 using namespace Gazua;
 
-UserInfo::UserInfo() {}
+UserInfo::UserInfo(QObject* parent):
+QAbstractItemModel{parent}
+{}
 
 QModelIndex UserInfo::index(int row, int column, const QModelIndex &parent) const {
-    return QModelIndex{};
+    qDebug() << "index" << row << column;
+    if(!hasIndex(row, column, parent))
+        return QModelIndex{};
+    return createIndex(row, column, nullptr);
 }
 
 QModelIndex UserInfo::parent(const QModelIndex &index) const {
@@ -17,15 +23,50 @@ QModelIndex UserInfo::parent(const QModelIndex &index) const {
 }
 
 int UserInfo::rowCount(const QModelIndex &parent) const {
+    if(parent.isValid()) {
+        qDebug() << "rowCount" << 0;
+        return 0;
+    }
+    qDebug() << "rowCount" << 10;
     return 10;
+    //return m_balances.size();
 }
 
 int UserInfo::columnCount(const QModelIndex &parent) const {
-    return 10;
+    if(parent.isValid()) {
+        qDebug() << "columnCount" << 0;
+        return 0;
+    }
+    qDebug() << "columnCount" << 1;
+    return 1;
 }
 
 QVariant UserInfo::data(const QModelIndex &index, int role) const {
-    return QVariant{index.row() + index.column()};
+    if(!index.isValid()) {
+        qDebug() << "data" << index.row() << index.column() << QVariant{};
+
+        return QVariant{};
+    }
+
+    if(role != Qt::DisplayRole)
+        return QVariant{};
+
+    qDebug() << "data" << index.row() << index.column() << QVariant{100};
+
+    return QVariant{100};
+}
+
+Qt::ItemFlags UserInfo::flags(const QModelIndex &index) const {
+    if(!index.isValid())
+        return 0;
+
+    return QAbstractItemModel::flags(index);
+}
+
+QVariant UserInfo::headerData(int section, Qt::Orientation orientation, int role) const {
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        return QVariant{"header"};
+    return QVariant{};
 }
 
 quint64 UserInfo::total_volume() {
