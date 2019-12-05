@@ -2,6 +2,7 @@
 #define USER_INFO_H
 
 #include <QAbstractItemModel>
+#include <QStandardItem>
 #include <QMap>
 #include "Balance.h"
 #include "Volume.h"
@@ -17,6 +18,7 @@ private:
     quint64 m_total_volume; // 모든 통화쌍 거래의 거래량 총합(KRW).
     quint64 m_timestamp; // 최종 거래량 및 거래 수수료 산정 시각(매시간에 한번씩 갱신).
     QMap<QString, Volume> m_volumes;
+    QStandardItem* m_rootItem;
 public:
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     virtual QModelIndex parent(const QModelIndex &index) const override;
@@ -25,6 +27,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    QStandardItem* getItem(const QModelIndex&) const;
 
     explicit UserInfo(QObject* parent = nullptr);
     quint64 total_volume();

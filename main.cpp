@@ -46,13 +46,14 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
-    //context->setContextProperty("userInfo", userInfo.get());
+    context->setContextProperty("userInfo", userInfo.get());
     context->setContextProperty("coinTreeModel", coinTreeModel.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     QTreeView view;
-    //view.setModel(userInfo.get());
     view.setModel(coinTreeModel.get());
+    view.setModel(userInfo.get());
+    //view.setModel(coinInfoModel.get());
     view.setWindowTitle(QObject::tr("hello"));
     view.show();
 
