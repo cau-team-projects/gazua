@@ -31,10 +31,6 @@ public:
     void total_volume(quint64);
     quint64 timestamp();
     void timestamp(quint64);
-    const QMap<QString, Balance>& balances() const;
-    QMap<QString, Balance>& balances();
-    const QMap<QString, Volume>& volumes() const;
-    QMap<QString, Volume>& volumes();
     void balance(const QString&, const Balance&);
     void volume(const QString&, const Volume&);
 };

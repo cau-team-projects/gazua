@@ -84,22 +84,6 @@ void UserInfo::timestamp(quint64 val) {
     m_timestamp = val; 
 }
 
-const QMap<QString, Balance>& UserInfo::balances() const {
-    return m_balances;
-}
-
-QMap<QString, Balance>& UserInfo::balances() {
-    return m_balances;
-}
-
-const QMap<QString, Volume>& UserInfo::volumes() const {
-    return m_volumes;
-}
-
-QMap<QString, Volume>& UserInfo::volumes() {
-    return m_volumes;
-}
-
 void UserInfo::balance(const QString& coinName, const Balance& balance) {
     m_balances[coinName] = balance;
 }

@@ -1,13 +1,13 @@
 #include "OrderModel.h"
 
-
+using namespace Gazua;
 
 OrderModel::OrderModel(QObject *parent)
     : QAbstractTableModel(parent) {
 }
 
 int OrderModel::rowCount(const QModelIndex &parent) const {
-    return orderList.size();
+    return orders.count();
 }
 
 int OrderModel::columnCount(const QModelIndex &parent) const {
@@ -20,41 +20,29 @@ QVariant OrderModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role == Qt::DisplayRole)
-        return orderList[index.row()][index.column()];
+        ;//return orderList[index.row()][index.column()];
     else
         return QVariant();
 }
 
-bool OrderModel::append(const QModelIndex &parent, std::shared_ptr<QMap<uint64_t, Gazua::Order>> orders) {
-    int cols = columnCount();
-
-    beginInsertRows(parent, 0, orders->size());
-
-    for(auto row = orders->begin(); row != orders->end(); row++) {
-       QStringList tmp;
-       tmp.append(QString::number(row.key()));
-       tmp.append(row->currency_pair);
-       tmp.append(row->side);
-       tmp.append(QString::number(row->avg_price));
-       tmp.append(QString::number(row->price));
-       tmp.append(QString::number((double)row->order_amount));
-       tmp.append(QString::number((double)row->filled_amount));
-       tmp.append(QString::number(row->order_total));
-       tmp.append(QString::number(row->filled_total));
-       tmp.append(QString::number(row->created_at));
-       tmp.append(QString::number(row->last_filled_at));
-       tmp.append(row->status);
-       tmp.append(QString::number((double)row->fee));
-
-       orderList.push_back(tmp);
-    }
-    endInsertRows();
-    return true;
+const QVariantMap& OrderModel::getOrders() const{
+    return orders;
 }
 
-bool OrderModel::remove(const QModelIndex &parent) {
-    orderList.clear();
-    return true;
+void OrderModel::append(QString id, QVariantMap orderField) {
+    orders.insert(id, orderField);
 }
 
+void OrderModel::remove(QString id) {
+    orders.remove(id);
+}
 
+QHash<int, QByteArray> OrderModel::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+    roles[NameRole] = "name";
+    roles[FieldRole] = "field";
+    return roles;
+}
+
+Q_PROPERTY(int count READ count NOTIFY countChanged)

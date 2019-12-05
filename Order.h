@@ -22,5 +22,6 @@ struct Gazua::Order {
     QString status; // 현재 주문의 상태 ('unfilled', 'partially_filled', 'filled')
     qreal fee; // 거래 수수료
 };
+Q_DECLARE_METATYPE(Gazua::Order);
 
 #endif
