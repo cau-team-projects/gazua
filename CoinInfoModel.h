@@ -1,5 +1,5 @@
-#ifndef COINMODEL_H
-#define COINMODEL_H
+#ifndef COININFOMODEL_H
+#define COININFOMODEL_H
 
 #include <QAbstractTableModel>
 #include <QString>
@@ -8,14 +8,14 @@
 #include "CoinInfo.h"
 
 namespace Gazua {
-    class CoinModel;
+    class CoinInfoModel;
 };
 
-class CoinModel : public QAbstractTableModel {
+class CoinInfoModel : public QAbstractTableModel {
     Q_OBJECT
 
 private:
-    QMap<QString, QVariant>* coinInfosMap;
+    QVariantMap *coinInfoModel;
 
 public:
     enum MapRoles {
@@ -23,17 +23,17 @@ public:
         ValueRole
     };
 
-    explicit CoinModel(QObject *parent = nullptr);
+    explicit CoinInfoModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     int count() const;
 
 public slots:
-    void append(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> newCoinInfo);
+    void append(QString newCoinName, QVariantMap newCoinFields);
     void remove(QString index);
-    void setMap(QMap<QString, QVariant> *coinInfosMap) { this->coinInfosMap = coinInfosMap; }
-
+    void setMap(QVariantMap *coinInfoModel) { this->coinInfoModel = coinInfoModel; }
+    QHash<int, QByteArray> roleNames() const;
 signals:
     void countChanged(int count);
 

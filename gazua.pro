@@ -17,26 +17,22 @@ HEADERS += \
         API.h \
         AmountType.h \
         Balance.h \
-        CoinInfo.h \
-        CoinModel.h \
+        CoinInfoModel.h \
         CoinTreeItem.h \
         CoinTreeModel.h \
         OrderType.h \
         Token.h \
         TokenType.h \
-        UserInfo.h \
-        Volume.h
+        UserInfo.h
 
 SOURCES += \
         API-kms.cpp \
         API-s.cpp \
-        CoinInfo.cpp \
-        CoinModel.cpp \
+        CoinInfoModel.cpp \
         CoinTreeItem.cpp \
         CoinTreeModel.cpp \
         Token.cpp \
         UserInfo.cpp \
-        Volume.h \
         main.cpp \
         API-gonapps.cpp
 

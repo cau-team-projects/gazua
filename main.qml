@@ -11,10 +11,13 @@ ApplicationWindow {
     height: parent.height
     width: parent.width
     TableViewColumn {
-        title: "test"
-        role: "testRole"
+        //title: "test"
+        //role: "testRole"
+        title: "hi"
+        role: "key"
         width: parent.width
     }
-    model: userInfo
+    //model: userInfo
+    model: coinInfoModel
   }
 }

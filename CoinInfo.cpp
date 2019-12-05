@@ -1,7 +1,6 @@
 #include "API.h"
 
-Gazua::CoinInfo::CoinInfo()
-{
+Gazua::CoinInfo::CoinInfo() {
     timestamp = 0;
     last = 0.0;
     open = 0.0;

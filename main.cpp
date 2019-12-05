@@ -5,7 +5,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "API.h"
-#include "CoinModel.h"
+#include "CoinInfoModel.h"
 #include "UserInfo.h"
 
 int main(int argc, char *argv[])
@@ -33,14 +33,17 @@ int main(int argc, char *argv[])
     auto userInfo = std::make_shared<Gazua::UserInfo>();
     api.refreshUserInfo(userInfo);
 
-/*
-    auto coinInfos = std::make_shared<QMap<QString, Gazua::CoinInfo>>();
+
+    auto coinInfos = std::make_shared<QVariantMap>();
     api.refreshCoinInfos(coinInfos);
-*/
+    qDebug() << "------------------------------maintest-------------------------";
+    qDebug() << qvariant_cast<QVariantMap>(coinInfos->value("btc_krw")).keys();
+    qDebug() << "------------------------------testend--------------------------";
 
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
-    context->setContextProperty("userInfo", userInfo.get());
+    //context->setContextProperty("userInfo", userInfo.get());
+    context->setContextProperty("coinInfos", *coinInfos);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();

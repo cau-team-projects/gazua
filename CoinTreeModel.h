@@ -38,7 +38,7 @@ public:
     //bool insertRows(int position, int rows,  const QModelIndex &parent = QModelIndex()) override;
     //bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
 
-    bool appendCoinInfos(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> coinInfos);
+    //bool appendCoinInfos(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> coinInfos);
 };
 
 #endif

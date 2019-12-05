@@ -82,14 +82,15 @@ Qt::ItemFlags CoinTreeModel::flags(const QModelIndex &index) const {
 //bool insertRows(int position, int rows,  const QModelIndex &parent = QModelIndex()) override;
 //bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
 
+/*
 bool CoinTreeModel::appendCoinInfos(std::shared_ptr<QMap<QString, Gazua::CoinInfo>> coinInfos) {
 
-    /*
+
     ** rootItem
     ** └┬ item(QDateTime time)
     **  └┬ item(QString coinName)
     **   └─ item(Gazua::CoinInfo coinField)
-    */
+
 
     rootItem->insertChildren(0, 1, 1);
     CoinTreeItem *newCoinInfosItem = rootItem->child(rootItem->childCount() - 1);
@@ -107,3 +108,4 @@ bool CoinTreeModel::appendCoinInfos(std::shared_ptr<QMap<QString, Gazua::CoinInf
 
     return true;
 }
+*/

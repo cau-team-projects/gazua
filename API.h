@@ -36,7 +36,7 @@ public:
     bool refresh();
     // GET https://api.korbit.co.kr/v1/ticker/detailed/all
     // GET https://api.korbit.co.kr/v1/constants
-    bool refreshCoinInfos(std::shared_ptr<QMap<QString, CoinInfo>> coinInfos);
+    bool refreshCoinInfos(std::shared_ptr<QVariantMap> coinInfos);
 
     // GET https://api.korbit.co.kr/v1/user/balances
     // GET https://api.korbit.co.kr/v1/user/volume
