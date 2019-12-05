@@ -5,7 +5,7 @@
 #include <QUrl>
 #include <QJsonDocument>
 
-bool Gazua::API::getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const QString& coinName, const QVector<uint64_t>& ids, uint64_t limit){
+bool Gazua::API::getOrders(std::shared_ptr<OrderModel> orderModel){
 
     /*
     qUrl.addQueryItem("currency_pair", coinName);
@@ -36,7 +36,7 @@ bool Gazua::API::getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const 
     network.setUrl(QUrl{"https://api.korbit.co.kr/v1/user/orders"});
 
     QNetworkReply* reply = m_qnam.get(network);
-    connect(reply, &QNetworkReply::finished, this, [reply, orders]() {
+    connect(reply, &QNetworkReply::finished, this, [reply, orderModel]() {
         auto jsonArr =  QJsonDocument::fromJson(reply->readAll()).array();
 
         for(auto iter = jsonArr.begin(); iter != jsonArr.end(); iter++) {
@@ -53,8 +53,9 @@ bool Gazua::API::getOrders(std::shared_ptr<QMap<uint64_t, Order>> orders, const 
             order.last_filled_at = (*iter).toObject()["last_filled_at"].toInt();
             order.status = (*iter).toObject()["status"].toString();
             order.fee = (*iter).toObject()["fee"].toDouble();
-
-            orders->insert((*iter).toObject()["id"].toInt(), order);
+            QVariant tmp;
+            tmp.setValue(order);
+            orderModel->orders.insert((*iter).toObject()["id"].toString(),tmp);
         }
         reply->close();
     });
