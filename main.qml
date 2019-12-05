@@ -7,17 +7,15 @@ ApplicationWindow {
   color: "red"
   width: 800
   height: 600
+
   TreeView {
+    id: view
     height: parent.height
     width: parent.width
+    model: userInfo
     TableViewColumn {
-        //title: "test"
-        //role: "testRole"
-        title: "hi"
-        role: "key"
-        width: parent.width
+      title: "test"
+      width: view.width
     }
-    //model: userInfo
-    model: coinInfoModel
   }
 }

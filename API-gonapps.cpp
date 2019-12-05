@@ -32,13 +32,13 @@ bool Gazua::API::access() {
         }
         if(root["access_token"].isUndefined()) {
             m_token = std::nullopt;
-            //qDebug() << "Failed to fetch token";
+            qDebug() << "Failed to fetch token";
         } else {
             const auto expiration = root["expires_in"].toInt();
             const auto accessToken = root["access_token"].toString();
             const auto refreshToken = root["refresh_token"].toString();
             m_token.emplace(Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken});
-            //qDebug() << m_token.value();
+            qDebug() << m_token.value();
         }
         reply->close();
         // reply->deleteLater(); not sure
@@ -69,13 +69,13 @@ bool Gazua::API::refresh() {
         uint32_t scope = 0;
         if(root["access_token"].isUndefined()) {
             m_token = std::nullopt;
-            //qDebug() << "Failed to fetch token";
+            qDebug() << "Failed to fetch token";
         } else {
             const auto expiration = root["expires_in"].toInt();
             const auto accessToken = root["access_token"].toString();
             const auto refreshToken = root["refresh_token"].toString();
             m_token.emplace(Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken});
-            //qDebug() << m_token.value();
+            qDebug() << m_token.value();
         }
         reply->close();
         // reply->deleteLater(); not sure
@@ -102,12 +102,14 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
              balance.withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(); 
              balance.avg_price = root[coinName]["avg_price"].toString().toDouble();
              balance.avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble());
-             //qDebug() << coinName << ">>>>>>>>>>>>>>>>";
-             //qDebug() << "available: " << balance.available;
-             //qDebug() << "trade_in_use: " << balance.trade_in_use;
-             //qDebug() << "withdrawal_in_use: " << balance.withdrawal_in_use;
-             //qDebug() << "avg_price: " << balance.avg_price;
-             //qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
+
+             qDebug() << coinName << ">>>>>>>>>>>>>>>>";
+             qDebug() << "available: " << balance.available;
+             qDebug() << "trade_in_use: " << balance.trade_in_use;
+             qDebug() << "withdrawal_in_use: " << balance.withdrawal_in_use;
+             qDebug() << "avg_price: " << balance.avg_price;
+             qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
+
         }
     });
     QNetworkRequest volumesReq{std::move(QUrl{"https://api.korbit.co.kr/v1/user/volume"})};
@@ -115,12 +117,13 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     auto volumesReply = m_qnam.get(volumesReq);
     connect(volumesReply, &QNetworkReply::finished, this, [volumesReply, userInfo] () {
         auto data = volumesReply->readAll();
-        //qDebug() << data;
         const auto root = QJsonDocument::fromJson(std::move(data)).object();
         userInfo->total_volume(static_cast<quint64>(root["total_volume"].toDouble()));
         userInfo->timestamp(static_cast<quint64>(root["timestamp"].toDouble()));
-        //qDebug() << "total_volume: " << userInfo->total_volume();
-        //qDebug() << "timestamp: " << userInfo->timestamp();
+/*
+        qDebug() << "total_volume: " << userInfo->total_volume();
+        qDebug() << "timestamp: " << userInfo->timestamp();
+*/
 
         for(const auto& coinName : root.keys()) {
             auto& volumes = userInfo->volumes();
@@ -128,11 +131,13 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
             volume.volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong());
             volume.maker_fee = root[coinName]["maker_fee"].toString().toDouble();
             volume.taker_fee = root[coinName]["taker_fee"].toString().toDouble(); 
+/*
+            qDebug() << coinName << ">>>>>>>>>>>>>>>>";
+            qDebug() << "volume: " << volume.volume;
+            qDebug() << "maker_fee: " << volume.maker_fee;
+            qDebug() << "taker_fee: " << volume.taker_fee;
+*/
 
-            //qDebug() << coinName << ">>>>>>>>>>>>>>>>";
-            //qDebug() << "volume: " << volume.volume;
-            //qDebug() << "maker_fee: " << volume.maker_fee;
-            //qDebug() << "taker_fee: " << volume.taker_fee;
         }
     });
     return true;

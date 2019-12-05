@@ -1,4 +1,4 @@
-QT += quick network
+QT += quick network widgets
 
 CONFIG += c++17
 
