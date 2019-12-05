@@ -51,12 +51,14 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     QTreeView view;
-    view.setModel(coinTreeModel.get());
     view.setModel(userInfo.get());
-    //view.setModel(coinInfoModel.get());
-    view.setWindowTitle(QObject::tr("hello"));
+    view.setWindowTitle(QObject::tr("UserInfo"));
     view.show();
 
+    QTreeView view2;
+    view2.setModel(coinTreeModel.get());
+    view2.setWindowTitle(QObject::tr("CoinTree"));
+    view2.show();
 
     return app.exec();
 }
