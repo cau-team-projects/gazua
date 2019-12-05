@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
     QTreeView view;
     view.setModel(userInfo.get());
     view.setWindowTitle(QObject::tr("UserInfo"));
+    view.expandAll();
     view.show();
 
     QTreeView view2;

@@ -13,23 +13,13 @@ QAbstractItemModel{parent}
     m_rootItem = new QStandardItem{};
     m_rootItem->appendRow(new QStandardItem{"balances"});
     m_rootItem->appendRow(new QStandardItem{"total_volume"});
-
-    m_rootItem->child(1)->appendRow(new QStandardItem{"value"});
-    m_rootItem->child(1)->appendRow(new QStandardItem{"value"});
-    m_rootItem->child(1)->appendRow(new QStandardItem{"value"});
-
+    m_rootItem->child(static_cast<int>(Row::TOTAL_VOLUME))->appendRow(new QStandardItem{"empty"});
     m_rootItem->appendRow(new QStandardItem{"timestamp"});
-    m_rootItem->child(2)->appendRow(new QStandardItem{"value"});
+    m_rootItem->child(static_cast<int>(Row::TIMESTAMP))->appendRow(new QStandardItem{"empty"});
     m_rootItem->appendRow(new QStandardItem{"volumes"});
 }
 
 QModelIndex UserInfo::index(int row, int column, const QModelIndex &parent) const {
-/*
-    qDebug() << "index" << row << column;
-    if(!hasIndex(row, column, parent))
-        return QModelIndex{};
-    return createIndex(row, column, nullptr);
-*/
     if(parent.isValid() && parent.column() != 0)
         return QModelIndex{};
     auto parentItem = getItem(parent);
@@ -51,16 +41,7 @@ QModelIndex UserInfo::parent(const QModelIndex &index) const {
 }
 
 int UserInfo::rowCount(const QModelIndex &parent) const {
-    qDebug() << "rowCount" << getItem(parent)->rowCount();
     return getItem(parent)->rowCount();
-/*
-    if(parent.isValid()) {
-        qDebug() << "rowCount" << 0;
-        return 0;
-    }
-    qDebug() << "rowCount" << 10;
-    return m_balances.size();
-*/
 }
 
 int UserInfo::columnCount(const QModelIndex &parent) const {
@@ -74,20 +55,6 @@ QVariant UserInfo::data(const QModelIndex &index, int role) const {
         return QVariant{};
     auto item = getItem(index);
     return item->data(index.column());
-/*
-    if(!index.isValid()) {
-        qDebug() << "data" << index.row() << index.column() << QVariant{};
-
-        return QVariant{};
-    }
-
-    if(role != Qt::DisplayRole)
-        return QVariant{};
-
-    qDebug() << "data" << index.row() << index.column() << m_balances[m_balances.keys().at(index.row())].avg_price_updated_at;
-
-    return m_balances[m_balances.keys().at(index.row())].avg_price_updated_at;
-*/
 }
 
 Qt::ItemFlags UserInfo::flags(const QModelIndex &index) const {
@@ -99,8 +66,7 @@ Qt::ItemFlags UserInfo::flags(const QModelIndex &index) const {
 
 QVariant UserInfo::headerData(int section, Qt::Orientation orientation, int role) const {
     if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        if(section == 0)
-            return QVariant{"header"};
+        return QVariant{section};
     }
     return QVariant{};
 }
@@ -120,6 +86,7 @@ quint64 UserInfo::total_volume() {
 
 void UserInfo::total_volume(quint64 val) {
     m_total_volume = val;
+    m_rootItem->child(static_cast<int>(Row::TOTAL_VOLUME))->child(0)->setText(std::move(QString::number(m_total_volume)));
 }
 
 quint64 UserInfo::timestamp() {
@@ -128,6 +95,7 @@ quint64 UserInfo::timestamp() {
 
 void UserInfo::timestamp(quint64 val) {
     m_timestamp = val; 
+    m_rootItem->child(static_cast<int>(Row::TIMESTAMP))->child(0)->setText(std::move(QString::number(m_timestamp)));
 }
 
 void UserInfo::balance(const QString& coinName, const Balance& balance) {

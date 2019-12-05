@@ -19,6 +19,14 @@ private:
     quint64 m_timestamp; // 최종 거래량 및 거래 수수료 산정 시각(매시간에 한번씩 갱신).
     QMap<QString, Volume> m_volumes;
     QStandardItem* m_rootItem;
+    enum class Row : int {
+        BALANCES = 0,
+        TOTAL_VOLUME,
+        TIMESTAMP,
+        VOLUMES
+    };
+
+    static constexpr int BALANCES = 0;
 public:
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     virtual QModelIndex parent(const QModelIndex &index) const override;
