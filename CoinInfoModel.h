@@ -16,8 +16,8 @@ private:
 
 public:
     enum MapRoles {
-        KeyRole = Qt::UserRole + 1,
-        ValueRole
+        NameRole = Qt::UserRole + 1,
+        FieldRole
     };
 
     explicit CoinInfoModel(QObject *parent = nullptr);

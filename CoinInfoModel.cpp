@@ -15,7 +15,7 @@ int CoinInfoModel::columnCount(const QModelIndex & parent) const {
 QVariant CoinInfoModel::data(const QModelIndex& index, int role) const {
 
     if (role == Qt::DisplayRole) {
-       return QString("Row%1, Column%2")
+       return QString(coinInfo.keys().at(index.row()) + ", " + qvariant_cast<QVariantMap>(coinInfo.values().at(index.row())).value("test").toString()) //  + "Row%1, Column%2"
                    .arg(index.row() + 1)
                    .arg(index.column() +1);
     }
@@ -58,8 +58,8 @@ void CoinInfoModel::remove(QString coinName) {
 QHash<int, QByteArray> CoinInfoModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[KeyRole] = "key";
-    roles[ValueRole] = "value";
+    roles[NameRole] = "name";
+    roles[FieldRole] = "field";
     return roles;
 }
 

@@ -39,14 +39,15 @@ int main(int argc, char *argv[])
     auto coinInfoModel = std::make_shared<Gazua::CoinInfoModel>();
     api.refreshCoinInfo(coinInfoModel);
 
-    //qDebug() << "------------------------------maintest-------------------------";
-    //qDebug() << qvariant_cast<QVariantMap>(coinInfo->getCoinInfo().value("btc_krw")).keys();
-    //qDebug() << "------------------------------testend--------------------------";
+    QVariantMap dummyQMap;
+    dummyQMap.insert("test", QString::fromStdString("test field value"));
+    coinInfoModel->append("test name", dummyQMap);
+    coinInfoModel->append("test name 2", dummyQMap);
 
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
-    context->setContextProperty("userInfo", userInfo.get());
-    //context->setContextProperty("coinInfos", coinInfo.get());
+    //context->setContextProperty("userInfo", userInfo.get());
+    context->setContextProperty("coinInfoModel", coinInfoModel.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     QTreeView view;
