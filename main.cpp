@@ -12,7 +12,6 @@
 
 int main(int argc, char *argv[])
 {
-
     //QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
 
@@ -35,7 +34,7 @@ int main(int argc, char *argv[])
     Gazua::API api{std::move(key), std::move(secret)};
     api.access();
     auto userInfo = std::make_shared<Gazua::UserInfo>();
-//    api.refreshUserInfo(userInfo);
+    api.refreshUserInfo(userInfo);
 
     auto coinInfoModel = std::make_shared<Gazua::CoinInfoModel>();
     api.refreshCoinInfo(coinInfoModel);

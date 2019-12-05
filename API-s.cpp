@@ -24,7 +24,6 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinInfoModel> coinInfoModel) {
 
         QVariantMap coinInfo = coinInfoModel->getCoinInfo();
 
-        qDebug() << "------------------------------test2222222-----------------------------";
         for(const QString& coinName : detailObject.keys()) {
 
             QVariantMap coinFields;
@@ -32,39 +31,39 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinInfoModel> coinInfoModel) {
             else coinFields = qvariant_cast<QVariantMap>(coinInfo[coinName]);
 
             for(const QString& fieldName : detailObject[coinName].toObject().keys()) {
-                qDebug() << "------------------------------test3333333-----------------------------";
 
                 if (!coinFields.contains(fieldName)) coinFields.insert(fieldName, detailObject.value(coinName).toObject().value(fieldName).toVariant());
                 else coinFields[fieldName] = detailObject.value(coinName).toObject().value(fieldName).toVariant();
             }
-qDebug() << "------------------------------test444444444-----------------------------";
 
         }
-qDebug() << "------------------------------test666666-----------------------------";
         detailReply->close();
-        qDebug() << "------------------------------test7777777-----------------------------";
         // detailReply->deleteLater(); not sure
     });
 
-    /*
     QNetworkRequest constraintRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}};
     QNetworkReply *constraintReply = m_qnam.get(constraintRequest);
-    connect(constraintReply, &QNetworkReply::finished, this, [this, constraintReply, coinInfo] () {
+    connect(constraintReply, &QNetworkReply::finished, this, [this, constraintReply, coinInfoModel] () {
         QJsonObject constraintObject = QJsonDocument::fromJson(constraintReply->readAll()).object()["exchange"].toObject();
 
-        for(const QString& coinKey : constraintObject.keys()) {
-            QVariantMap refreshedCoinInfo = coinInfo->getCoinFields(coinKey);
-            for(const QString& fieldKey : constraintObject[coinKey].toObject().keys()) {
-                refreshedCoinInfo[fieldKey] = constraintObject.value(coinKey).toObject().value(fieldKey).toVariant();
-                //qDebug() << refreshedCoinInfo[fieldKey];
+        QVariantMap coinInfo = coinInfoModel->getCoinInfo();
+
+        for(const QString& coinName : constraintObject.keys()) {
+
+            QVariantMap coinFields;
+            if (!coinInfo.contains(coinName)) coinFields.insert(coinName, QVariant());
+            else coinFields = qvariant_cast<QVariantMap>(coinInfo[coinName]);
+
+            for(const QString& fieldName : constraintObject[coinName].toObject().keys()) {
+
+                if (!coinFields.contains(fieldName)) coinFields.insert(fieldName, constraintObject.value(coinName).toObject().value(fieldName).toVariant());
+                else coinFields[fieldName] = constraintObject.value(coinName).toObject().value(fieldName).toVariant();
             }
-            coinInfo->remove(coinKey);
-            coinInfo->append(coinKey, refreshedCoinInfo);
+
         }
         constraintReply->close();
         // constraintReply->deleteLater(); not sure
     });
-*/
 
     //qDebug() << "------------------------------test-----------------------------";
     //qDebug() << qvariant_cast<QVariantMap>(coinInfo->getCoinInfo().value("btc_krw")).keys();
