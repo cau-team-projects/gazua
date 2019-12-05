@@ -35,6 +35,8 @@ public:
     QMap<QString, Balance>& balances();
     const QMap<QString, Volume>& volumes() const;
     QMap<QString, Volume>& volumes();
+    void balance(const QString&, const Balance&);
+    void volume(const QString&, const Volume&);
 };
 
 #endif

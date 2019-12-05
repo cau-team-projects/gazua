@@ -95,21 +95,24 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     connect(balancesReply, &QNetworkReply::finished, this, [balancesReply, userInfo] () {
         const auto root = QJsonDocument::fromJson(balancesReply->readAll()).object();
         for(const auto& coinName : root.keys()) {
-             auto& balances = userInfo->balances();
-             auto& balance = balances[coinName];
-             balance.available = root[coinName]["available"].toString().toDouble();
-             balance.trade_in_use = root[coinName]["trade_in_use"].toString().toDouble();
-             balance.withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(); 
-             balance.avg_price = root[coinName]["avg_price"].toString().toDouble();
-             balance.avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble());
-
+             userInfo->balance(
+                 coinName,
+                 {
+                     .available = root[coinName]["available"].toString().toDouble(),
+                     .trade_in_use = root[coinName]["trade_in_use"].toString().toDouble(),
+                     .withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(),
+                     .avg_price = root[coinName]["avg_price"].toString().toDouble(),
+                     .avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble())
+                 }
+             );
+/*
              qDebug() << coinName << ">>>>>>>>>>>>>>>>";
              qDebug() << "available: " << balance.available;
              qDebug() << "trade_in_use: " << balance.trade_in_use;
              qDebug() << "withdrawal_in_use: " << balance.withdrawal_in_use;
              qDebug() << "avg_price: " << balance.avg_price;
              qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
-
+*/
         }
     });
     QNetworkRequest volumesReq{std::move(QUrl{"https://api.korbit.co.kr/v1/user/volume"})};
@@ -126,11 +129,14 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
 */
 
         for(const auto& coinName : root.keys()) {
-            auto& volumes = userInfo->volumes();
-            auto& volume = volumes[coinName];
-            volume.volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong());
-            volume.maker_fee = root[coinName]["maker_fee"].toString().toDouble();
-            volume.taker_fee = root[coinName]["taker_fee"].toString().toDouble(); 
+            userInfo->volume(
+                coinName,
+                {
+                    .volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong()),
+                    .maker_fee = root[coinName]["maker_fee"].toString().toDouble(),
+                    .taker_fee = root[coinName]["taker_fee"].toString().toDouble()
+                }
+            );
 /*
             qDebug() << coinName << ">>>>>>>>>>>>>>>>";
             qDebug() << "volume: " << volume.volume;

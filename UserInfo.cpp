@@ -99,3 +99,11 @@ const QMap<QString, Volume>& UserInfo::volumes() const {
 QMap<QString, Volume>& UserInfo::volumes() {
     return m_volumes;
 }
+
+void UserInfo::balance(const QString& coinName, const Balance& balance) {
+    m_balances[coinName] = balance;
+}
+
+void UserInfo::volume(const QString& coinName, const Volume& volume) {
+    m_volumes[coinName] = volume;
+}
