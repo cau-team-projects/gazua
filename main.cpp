@@ -5,6 +5,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QTreeView>
+#include <QTimer>
 #include <QApplication>
 #include "API.h"
 #include "CoinInfoModel.h"
@@ -36,7 +37,8 @@ int main(int argc, char *argv[])
     Gazua::API api{std::move(key), std::move(secret)};
     api.access();
     auto userInfo = std::make_shared<Gazua::UserInfo>();
-    api.refreshUserInfo(userInfo);
+
+
 
     QStringList coinInfoModelHeader;
     coinInfoModelHeader << "1" << "2" << "3";
@@ -55,6 +57,14 @@ int main(int argc, char *argv[])
     view.setWindowTitle(QObject::tr("UserInfo"));
     view.expandAll();
     view.show();
+
+    QTimer timer{};
+    api.connect(&timer, &QTimer::timeout, &api, [&api, userInfo, &view] () {
+        api.refreshUserInfo(userInfo);
+        view.expandAll();
+    });
+    timer.start(1000);
+
 
     QTreeView view2;
     view2.setModel(coinTreeModel.get());
