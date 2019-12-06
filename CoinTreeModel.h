@@ -23,6 +23,7 @@ public:
     ~CoinTreeModel() override;
 
     CoinTreeItem *getItem(const QModelIndex &index) const;
+    CoinTreeItem *getRootItem() const;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;

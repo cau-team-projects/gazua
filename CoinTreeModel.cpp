@@ -54,6 +54,8 @@ CoinTreeItem *CoinTreeModel::getItem(const QModelIndex &index) const
     return rootItem;
 }
 
+CoinTreeItem *CoinTreeModel::getRootItem() const { return rootItem; }
+
 QVariant CoinTreeModel::headerData(int section, Qt::Orientation orientation,
                                int role) const
 {

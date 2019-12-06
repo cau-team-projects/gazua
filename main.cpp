@@ -38,13 +38,9 @@ int main(int argc, char *argv[])
     api.access();
     auto userInfo = std::make_shared<Gazua::UserInfo>();
 
-
-
     QStringList coinInfoModelHeader;
     coinInfoModelHeader << "1" << "2" << "3";
-
     auto coinTreeModel = std::make_shared<Gazua::CoinTreeModel>(coinInfoModelHeader, QString(), nullptr);
-    api.refreshCoinInfo(coinTreeModel);
 
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
@@ -58,20 +54,21 @@ int main(int argc, char *argv[])
     view.expandAll();
     view.show();
 
-    QTimer timer{};
-    api.connect(&timer, &QTimer::timeout, &api, [&api, coinTreeModel, userInfo, &view] () {
-        api.refreshCoinInfo(coinTreeModel);
-        api.refreshUserInfo(userInfo);
-        view.expandAll();
-    });
-    timer.start(1000);
-
-
     QTreeView view2;
     view2.setModel(coinTreeModel.get());
     view2.setWindowTitle(QObject::tr("CoinTree"));
-    //view2.setRootIndex();
+    view2.expandAll();
+    //view2.setRootIndex(coinTreeModel->index(coinTreeModel->getRootItem()->childCount() - 1, 0, coinTreeModel->index(0, 0, QModelIndex())));
     view2.show();
+
+    QTimer timer{};
+    api.connect(&timer, &QTimer::timeout, &api, [&api, coinTreeModel, userInfo, &view, &view2] () {
+        api.refreshCoinInfo(coinTreeModel);
+        api.refreshUserInfo(userInfo);
+        view.expandAll();
+        //view2.expandAll();
+    });
+    timer.start(4000);
 
     return app.exec();
 }
