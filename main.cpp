@@ -59,7 +59,8 @@ int main(int argc, char *argv[])
     view.show();
 
     QTimer timer{};
-    api.connect(&timer, &QTimer::timeout, &api, [&api, userInfo, &view] () {
+    api.connect(&timer, &QTimer::timeout, &api, [&api, coinTreeModel, userInfo, &view] () {
+        api.refreshCoinInfo(coinTreeModel);
         api.refreshUserInfo(userInfo);
         view.expandAll();
     });
@@ -69,6 +70,7 @@ int main(int argc, char *argv[])
     QTreeView view2;
     view2.setModel(coinTreeModel.get());
     view2.setWindowTitle(QObject::tr("CoinTree"));
+    //view2.setRootIndex();
     view2.show();
 
     return app.exec();

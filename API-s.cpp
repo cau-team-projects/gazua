@@ -16,87 +16,69 @@
 
 bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinTreeModel> coinInfoModel) {
 
-    QJsonObject detailObject;
-    QJsonObject constraintObject;
-
     QNetworkRequest detailRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}};
     QNetworkReply *detailReply = m_qnam.get(detailRequest);
-    connect(detailReply, &QNetworkReply::finished, this, [this, detailReply, coinInfoModel] () {
+
+    QModelIndex coinTreeRootIndex = coinInfoModel->index(0, 0, QModelIndex());
+    CoinTreeItem *coinTreeRoot = coinInfoModel->getItem(coinTreeRootIndex);
+
+    connect(detailReply, &QNetworkReply::finished, this, [this, detailReply, coinInfoModel, coinTreeRoot, coinTreeRootIndex] () {
         QJsonObject detailObject = QJsonDocument::fromJson(detailReply->readAll()).object();
-        CoinTreeItem *coinTreeRoot = coinInfoModel->getItem(coinInfoModel->index(0, 0, QModelIndex()));
-        coinTreeRoot->removeChildren(0, coinTreeRoot->childCount()); // removeAll except root
+
+        bool isInitializing = (coinTreeRoot->childCount() <= 0) ? true : false;
+        int fieldNameIter = 0;
+
+        int detail_coinNameIter = 0;
         for(const QString& coinName : detailObject.keys()) {
-            coinTreeRoot->insertChildren(coinTreeRoot->childCount(), 1, 1);
+            if (isInitializing) coinTreeRoot->insertChildren(detail_coinNameIter, 1, 1);
+            CoinTreeItem *coinType = coinTreeRoot->child(detail_coinNameIter);
+            QModelIndex coinTypeIndex = coinInfoModel->index(detail_coinNameIter, 0, coinTreeRootIndex);
+            if (isInitializing) coinInfoModel->setData(coinTypeIndex, coinName);
 
-            CoinTreeItem *coinType = coinTreeRoot->child(coinTreeRoot->childCount() - 1);
-            coinType->setData(0, coinName);
-
+            fieldNameIter = 0;
             for(const QString& fieldName : detailObject[coinName].toObject().keys()) {
-                coinType->insertChildren(coinType->childCount(), 1, 2);
-                coinType->child(coinType->childCount() - 1)->setData(0, fieldName);
-                coinType->child(coinType->childCount() - 1)->setData(1, detailObject.value(coinName).toObject().value(fieldName).toVariant());
+                if (isInitializing) coinType->insertChildren(fieldNameIter, 1, 2);
+                if (isInitializing) coinInfoModel->setData(coinInfoModel->index(fieldNameIter, 0, coinTypeIndex), fieldName);
+                coinInfoModel->setData(coinInfoModel->index(fieldNameIter, 1, coinTypeIndex), detailObject.value(coinName).toObject().value(fieldName).toVariant());
+
+                fieldNameIter++;
             }
+            detail_coinNameIter++;
         }
         detailReply->close();
         // detailReply->deleteLater(); not sure
 
 
+
         QNetworkRequest constraintRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}};
         QNetworkReply *constraintReply = m_qnam.get(constraintRequest);
-        connect(constraintReply, &QNetworkReply::finished, this, [this, constraintReply, coinTreeRoot] () {
+
+        connect(constraintReply, &QNetworkReply::finished, this, [constraintReply, isInitializing, coinInfoModel, coinTreeRoot, coinTreeRootIndex, fieldNameIter] () {
             QJsonObject constraintObject = QJsonDocument::fromJson(constraintReply->readAll()).object()["exchange"].toObject();
 
-            //CoinTreeItem *coinTreeRoot = coinInfoModel->getItem(coinInfoModel->index(0, 0, QModelIndex()));
+            int constraint_coinNameIter = 0;
+            int constraint_fieldNameIter = fieldNameIter;
 
-            int i = 0;
             for(const QString& coinName : constraintObject.keys()) {
-                CoinTreeItem *coinType = coinTreeRoot->child(i);
-                qDebug() << coinTreeRoot->childCount();
-                qDebug() << coinType->childCount();
+                CoinTreeItem *coinType = coinTreeRoot->child(constraint_coinNameIter);
+                QModelIndex coinTypeIndex = coinInfoModel->index(constraint_coinNameIter, 0, coinTreeRootIndex);
+
+                constraint_fieldNameIter = fieldNameIter;
                 for(const QString& fieldName : constraintObject[coinName].toObject().keys()) {
-                    qDebug() << coinName << fieldName << coinType->childCount();
-                    coinType->insertChildren(coinType->childCount(), 1, 2);
-                    coinType->child(coinType->childCount() - 1)->setData(0, fieldName);
-                    coinType->child(coinType->childCount() - 1)->setData(1, constraintObject.value(coinName).toObject().value(fieldName).toVariant());
+                    if (isInitializing) coinType->insertChildren(constraint_fieldNameIter, 1, 2);
+                    if (isInitializing) coinInfoModel->setData(coinInfoModel->index(constraint_fieldNameIter, 0, coinTypeIndex), fieldName);
+                    coinInfoModel->setData(coinInfoModel->index(constraint_fieldNameIter, 1, coinTypeIndex), constraintObject.value(coinName).toObject().value(fieldName).toVariant());
+
+                    constraint_fieldNameIter++;
                 }
-                i++;
+                constraint_coinNameIter++;
             }
 
             constraintReply->close();
             // constraintReply->deleteLater(); not sure
         });
 
-
-
-
-
-
     });
-
-    /*
-    QNetworkRequest constraintRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}};
-    QNetworkReply *constraintReply = m_qnam.get(constraintRequest);
-    connect(constraintReply, &QNetworkReply::finished, this, [this, constraintReply, coinInfoModel] () {
-        QJsonObject constraintObject = QJsonDocument::fromJson(constraintReply->readAll()).object()["exchange"].toObject();
-
-        CoinTreeItem *coinTreeRoot = coinInfoModel->getItem(coinInfoModel->index(0, 0, QModelIndex()));
-
-        int i = 0;
-        for(const QString& coinName : constraintObject.keys()) {
-            CoinTreeItem *coinType = coinTreeRoot->child(i);
-            for(const QString& fieldName : constraintObject[coinName].toObject().keys()) {
-                    qDebug() << coinName << fieldName << coinType->childCount();
-                coinType->insertChildren(coinType->childCount(), 1, 2);
-                coinType->child(coinType->childCount() - 1)->setData(0, fieldName);
-                coinType->child(coinType->childCount() - 1)->setData(1, constraintObject.value(coinName).toObject().value(fieldName).toVariant());
-            }
-            i++;
-        }
-
-        constraintReply->close();
-        // constraintReply->deleteLater(); not sure
-    });
-*/
 
     return true;
 }
