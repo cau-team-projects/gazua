@@ -85,15 +85,15 @@ void CoinInfo::tickers(QMap<QString, Ticker>&& tickers) {
             auto tickerRow = new QStandardItem{};
             tickerRow->setText(key);
             tickerRow->appendRow({new QStandardItem{"timestamp"}, new QStandardItem{QString::number(tickers[key].timestamp)}});
-            tickerRow->appendRow({new QStandardItem{"last"}, new QStandardItem{QString::number(tickers[key].last)}});
-            tickerRow->appendRow({new QStandardItem{"open"}, new QStandardItem{QString::number(tickers[key].open)}});
-            tickerRow->appendRow({new QStandardItem{"bid"}, new QStandardItem{QString::number(tickers[key].bid)}});
-            tickerRow->appendRow({new QStandardItem{"ask"}, new QStandardItem{QString::number(tickers[key].ask)}});
-            tickerRow->appendRow({new QStandardItem{"low"}, new QStandardItem{QString::number(tickers[key].low)}});
-            tickerRow->appendRow({new QStandardItem{"high"}, new QStandardItem{QString::number(tickers[key].high)}});
-            tickerRow->appendRow({new QStandardItem{"volume"}, new QStandardItem{QString::number(tickers[key].volume)}});
-            tickerRow->appendRow({new QStandardItem{"change"}, new QStandardItem{QString::number(tickers[key].change)}});
-            tickerRow->appendRow({new QStandardItem{"changePercent"}, new QStandardItem{QString::number(tickers[key].changePercent)}});
+            tickerRow->appendRow({new QStandardItem{"last"}, new QStandardItem{QString::number(tickers[key].last, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"open"}, new QStandardItem{QString::number(tickers[key].open, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"bid"}, new QStandardItem{QString::number(tickers[key].bid, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"ask"}, new QStandardItem{QString::number(tickers[key].ask, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"low"}, new QStandardItem{QString::number(tickers[key].low, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"high"}, new QStandardItem{QString::number(tickers[key].high, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"volume"}, new QStandardItem{QString::number(tickers[key].volume, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"change"}, new QStandardItem{QString::number(tickers[key].change, 'f')}});
+            tickerRow->appendRow({new QStandardItem{"changePercent"}, new QStandardItem{QString::number(tickers[key].changePercent, 'f')}});
             tickersRow->appendRow(tickerRow);
         }
     } else {
@@ -101,15 +101,15 @@ void CoinInfo::tickers(QMap<QString, Ticker>&& tickers) {
         foreach(auto &key, tickers.keys()) {
             auto tickerRow = tickersRow->child(i);
             tickerRow->child(0, 1)->setText(QString::number(tickers[key].timestamp));
-            tickerRow->child(1, 1)->setText(QString::number(tickers[key].last));
-            tickerRow->child(2, 1)->setText(QString::number(tickers[key].open));
-            tickerRow->child(3, 1)->setText(QString::number(tickers[key].bid));
-            tickerRow->child(4, 1)->setText(QString::number(tickers[key].ask));
-            tickerRow->child(5, 1)->setText(QString::number(tickers[key].low));
-            tickerRow->child(6, 1)->setText(QString::number(tickers[key].high));
-            tickerRow->child(7, 1)->setText(QString::number(tickers[key].volume));
-            tickerRow->child(8, 1)->setText(QString::number(tickers[key].change));
-            tickerRow->child(9, 1)->setText(QString::number(tickers[key].changePercent));
+            tickerRow->child(1, 1)->setText(QString::number(tickers[key].last, 'f'));
+            tickerRow->child(2, 1)->setText(QString::number(tickers[key].open, 'f'));
+            tickerRow->child(3, 1)->setText(QString::number(tickers[key].bid, 'f'));
+            tickerRow->child(4, 1)->setText(QString::number(tickers[key].ask, 'f'));
+            tickerRow->child(5, 1)->setText(QString::number(tickers[key].low, 'f'));
+            tickerRow->child(6, 1)->setText(QString::number(tickers[key].high, 'f'));
+            tickerRow->child(7, 1)->setText(QString::number(tickers[key].volume, 'f'));
+            tickerRow->child(8, 1)->setText(QString::number(tickers[key].change, 'f'));
+            tickerRow->child(9, 1)->setText(QString::number(tickers[key].changePercent, 'f'));
             ++i;
         }
     }
@@ -123,22 +123,22 @@ void CoinInfo::constraints(QMap<QString, Constraint>&& constraints) {
         foreach(auto& key, constraints.keys()) {
             auto constraintRow = new QStandardItem{};
             constraintRow->setText(key);
-            constraintRow->appendRow({new QStandardItem{"tick_size"}, new QStandardItem{QString::number(constraints[key].tick_size)}});
-            constraintRow->appendRow({new QStandardItem{"min_price"}, new QStandardItem{QString::number(constraints[key].min_price)}});
-            constraintRow->appendRow({new QStandardItem{"max_price"}, new QStandardItem{QString::number(constraints[key].max_price)}});
-            constraintRow->appendRow({new QStandardItem{"order_min_price"}, new QStandardItem{QString::number(constraints[key].order_min_price)}});
-            constraintRow->appendRow({new QStandardItem{"order_max_price"}, new QStandardItem{QString::number(constraints[key].order_max_price)}});
+            constraintRow->appendRow({new QStandardItem{"tick_size"}, new QStandardItem{QString::number(constraints[key].tick_size, 'f')}});
+            constraintRow->appendRow({new QStandardItem{"min_price"}, new QStandardItem{QString::number(constraints[key].min_price, 'f')}});
+            constraintRow->appendRow({new QStandardItem{"max_price"}, new QStandardItem{QString::number(constraints[key].max_price, 'f')}});
+            constraintRow->appendRow({new QStandardItem{"order_min_price"}, new QStandardItem{QString::number(constraints[key].order_min_price, 'f')}});
+            constraintRow->appendRow({new QStandardItem{"order_max_price"}, new QStandardItem{QString::number(constraints[key].order_max_price, 'f')}});
             constraintsRow->appendRow(constraintRow);
         }
     } else {
         auto i = 0;
         foreach(auto &key, constraints.keys()) {
             auto constraintRow = constraintsRow->child(i);
-            constraintRow->child(0, 1)->setText(QString::number(constraints[key].tick_size));
-            constraintRow->child(1, 1)->setText(QString::number(constraints[key].min_price));
-            constraintRow->child(2, 1)->setText(QString::number(constraints[key].max_price));
-            constraintRow->child(3, 1)->setText(QString::number(constraints[key].order_min_price));
-            constraintRow->child(4, 1)->setText(QString::number(constraints[key].order_max_price));
+            constraintRow->child(0, 1)->setText(QString::number(constraints[key].tick_size, 'f'));
+            constraintRow->child(1, 1)->setText(QString::number(constraints[key].min_price, 'f'));
+            constraintRow->child(2, 1)->setText(QString::number(constraints[key].max_price, 'f'));
+            constraintRow->child(3, 1)->setText(QString::number(constraints[key].order_min_price, 'f'));
+            constraintRow->child(4, 1)->setText(QString::number(constraints[key].order_max_price, 'f'));
             ++i;
         }
     }

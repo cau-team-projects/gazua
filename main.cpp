@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     QTreeView view2;
     view2.setModel(coinInfo.get());
-    view2.setWindowTitle(QObject::tr("CoinTree"));
+    view2.setWindowTitle(QObject::tr("CoinInfo"));
     view2.resize(500, 1000);
     //view2.setRootIndex(coinInfo->index(coinInfo->getRootItem()->childCount() - 1, 0, coinInfo->index(0, 0, QModelIndex())));
     view2.show();

@@ -38,7 +38,6 @@ bool Gazua::API::access() {
             const auto accessToken = root["access_token"].toString();
             const auto refreshToken = root["refresh_token"].toString();
             m_token.emplace(Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken});
-            qDebug() << m_token.value();
         }
         reply->close();
         //reply->deleteLater();
@@ -75,7 +74,6 @@ bool Gazua::API::refresh() {
             const auto accessToken = root["access_token"].toString();
             const auto refreshToken = root["refresh_token"].toString();
             m_token.emplace(Token{tokenType, scope, static_cast<uint32_t>(expiration), accessToken, refreshToken});
-            qDebug() << m_token.value();
         }
         reply->close();
         //reply->deleteLater();
