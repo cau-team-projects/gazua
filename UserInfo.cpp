@@ -9,7 +9,7 @@ using namespace Gazua;
 UserInfo::UserInfo(QObject* parent):
 QAbstractItemModel{parent}
 {
-    m_rootItem = new QStandardItem{};
+    m_rootItem = new QStandardItem{0, 2};
     m_rootItem->appendRow(new QStandardItem{"balances"});
     m_rootItem->appendRow(new QStandardItem{"total_volume"});
     m_rootItem->appendRow(new QStandardItem{"timestamp"});
@@ -22,14 +22,12 @@ QAbstractItemModel{parent}
 }
 
 QModelIndex UserInfo::index(int row, int column, const QModelIndex &parent) const {
-    if(parent.isValid() && parent.column() != 0)
-        return QModelIndex{};
     auto parentItem = getItem(parent);
     auto childItem = parentItem->child(row, column);
     if(childItem)
         return createIndex(row, column, childItem);
     else
-        return QModelIndex();
+        return QModelIndex{};
 }
 
 QModelIndex UserInfo::parent(const QModelIndex &index) const {
@@ -105,7 +103,7 @@ void UserInfo::balances(QMap<QString, Balance>&& balances) {
     auto balancesRow = m_rootItem->child(static_cast<int>(Row::BALANCES));
     balancesRow->removeRows(0, balancesRow->rowCount());
     foreach(auto& key, m_balances.keys()) {
-        auto balanceRow = new QStandardItem{0, 2};
+        auto balanceRow = new QStandardItem{};
         balanceRow->setText(key);
         balanceRow->appendRow({new QStandardItem{"available"}, new QStandardItem{QString::number(m_balances[key].available)}});
         balanceRow->appendRow({new QStandardItem{"trade_in_use"}, new QStandardItem{QString::number(m_balances[key].trade_in_use)}});
