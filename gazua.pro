@@ -17,9 +17,9 @@ HEADERS += \
         API.h \
         AmountType.h \
         Balance.h \
-        CoinInfoModel.h \
-        CoinTreeItem.h \
-        CoinTreeModel.h \
+        Ticker.h \
+        Constraint.h \
+        CoinInfo.h \
         OrderType.h \
         Token.h \
         TokenType.h \
@@ -27,10 +27,7 @@ HEADERS += \
 
 SOURCES += \
         API-kms.cpp \
-        API-s.cpp \
-        CoinInfoModel.cpp \
-        CoinTreeItem.cpp \
-        CoinTreeModel.cpp \
+        CoinInfo.cpp \
         Token.cpp \
         UserInfo.cpp \
         main.cpp \

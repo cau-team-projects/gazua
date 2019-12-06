@@ -8,9 +8,7 @@
 #include <QTimer>
 #include <QApplication>
 #include "API.h"
-#include "CoinInfoModel.h"
-#include "CoinTreeModel.h"
-#include "CoinTreeItem.h"
+#include "CoinInfo.h"
 #include "UserInfo.h"
 
 int main(int argc, char *argv[])
@@ -38,14 +36,12 @@ int main(int argc, char *argv[])
     api.access();
     auto userInfo = std::make_shared<Gazua::UserInfo>();
 
-    QStringList coinInfoModelHeader;
-    coinInfoModelHeader << "1" << "2" << "3";
-    auto coinTreeModel = std::make_shared<Gazua::CoinTreeModel>(coinInfoModelHeader, QString(), nullptr);
+    auto coinInfo = std::make_shared<Gazua::CoinInfo>();
 /*
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
     context->setContextProperty("userInfo", userInfo.get());
-    context->setContextProperty("coinTreeModel", coinTreeModel.get());
+    context->setContextProperty("coinInfo", coinInfo.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 */
 
@@ -57,15 +53,15 @@ int main(int argc, char *argv[])
     view.show();
 
     QTreeView view2;
-    view2.setModel(coinTreeModel.get());
+    view2.setModel(coinInfo.get());
     view2.setWindowTitle(QObject::tr("CoinTree"));
     view2.resize(500, 1000);
-    //view2.setRootIndex(coinTreeModel->index(coinTreeModel->getRootItem()->childCount() - 1, 0, coinTreeModel->index(0, 0, QModelIndex())));
+    //view2.setRootIndex(coinInfo->index(coinInfo->getRootItem()->childCount() - 1, 0, coinInfo->index(0, 0, QModelIndex())));
     view2.show();
 
     QTimer timer{};
-    api.connect(&timer, &QTimer::timeout, &api, [&api, coinTreeModel, userInfo, &view, &view2] () {
-        api.refreshCoinInfo(coinTreeModel);
+    api.connect(&timer, &QTimer::timeout, &api, [&api, coinInfo, userInfo, &view, &view2] () {
+        api.refreshCoinInfo(coinInfo);
         api.refreshUserInfo(userInfo);
         view.expandAll();
         view2.expandAll();

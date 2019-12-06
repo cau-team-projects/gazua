@@ -105,6 +105,7 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
              };
         }
         userInfo->balances(std::move(balances));
+        balancesReply->close();
     });
     QNetworkRequest volumesReq{std::move(QUrl{"https://api.korbit.co.kr/v1/user/volume"})};
     volumesReq.setRawHeader(QString{"Authorization"}.toUtf8(), QString{"Bearer %1"}.arg(accessToken).toUtf8());
@@ -124,6 +125,35 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
             };
         }
         userInfo->volumes(std::move(volumes));
+        volumesReply->close();
     });
     return true;
+}
+
+bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinInfo> coinInfo) {
+    auto tickersReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}});
+    connect(tickersReply, &QNetworkReply::finished, this, [tickersReply, coinInfo] () {
+        const auto root = QJsonDocument::fromJson(tickersReply->readAll()).object();
+        QMap<QString, Ticker> tickers;
+        for(const auto& coinName : root.keys()) {
+             tickers[coinName] = (struct Ticker) {
+                 .timestamp = static_cast<quint64>(root[coinName]["timestamp"].toDouble()),
+                 .last = root[coinName]["last"].toString().toDouble(),
+                 .open = root[coinName]["open"].toString().toDouble(),
+                 .bid = root[coinName]["bid"].toString().toDouble(),
+                 .ask = root[coinName]["ask"].toString().toDouble(),
+                 .low = root[coinName]["low"].toString().toDouble(),
+                 .high = root[coinName]["high"].toString().toDouble(),
+                 .volume = root[coinName]["volume"].toString().toDouble(),
+                 .change = root[coinName]["change"].toString().toDouble(),
+                 .changePercent = root[coinName]["changePercent"].toString().toDouble(),
+             };
+        }
+        coinInfo->tickers(std::move(tickers));
+        tickersReply->close();
+    });
+    return true;
+/*
+    auto constraintsReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}});
+*/
 }

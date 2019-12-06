@@ -1,44 +1,44 @@
-/*
 #ifndef COIN_INFO_H
 #define COIN_INFO_H
 
-#include <QMetaType>
-#include <QObject>
-#include <ctime>
-#include <memory>
+#include <QAbstractItemModel>
+#include <QStandardItem>
+#include <QMap>
+#include "Ticker.h"
+#include "Constraint.h"
 
 namespace Gazua {
     class CoinInfo;
 };
 
-class Gazua::CoinInfo : public QObject {
-
-Q_OBJECT
+class Gazua::CoinInfo : public QAbstractItemModel {
+    Q_OBJECT
+private:
+    QMap<QString, Ticker> m_tickers;
+    QMap<QString, Constraint> m_constraints;
+    QStandardItem* m_rootItem;
+    enum class Row : int {
+        TICKERS = 0,
+        CONSTRAINTS
+    };
 public:
-    //ticker
-    long long timestamp;  //최종 체결 시각
-    double last,          //최종 체결 가격
-           open,          //최근 24시간 시작 가격
-           bid,           //매수호가
-           ask,           //매도호가
-           low,           //최근 24시간 체결 가격 중 최저가
-           high,          //최근 24시간 체결 가격 중 최고가
-           volume,        //거래량
-           change,        //시작 가격 대비 현재가 차이
-           changePercent; //시작 가격 대비 현재가 차이 변화 비율
+    virtual ~CoinInfo();
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    virtual QModelIndex parent(const QModelIndex &index) const override;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    QStandardItem* getItem(const QModelIndex&) const;
 
-    //constraint
-    double tick_size,      //호가 단위
-           min_price,      //최소 주문가
-           max_price,      //최대 주문가
-           order_min_size, //매수/매도 수량 최소 입력값
-           order_max_size; //매수/매도 수량 최대 입력값
-
-    static const QVector<QString> allVars;
-    //explicit CoinInfo();
+    explicit CoinInfo(QObject* parent = nullptr);
+    quint64 total_constraint();
+    void total_constraint(quint64);
+    quint64 timestamp();
+    void timestamp(quint64);
+    void tickers(QMap<QString, Ticker>&& tickers);
+    void constraints(QMap<QString, Constraint>&& constraints);
 };
 
-Q_DECLARE_METATYPE(Gazua::CoinInfo)
-
 #endif
-*/
