@@ -41,7 +41,7 @@ bool Gazua::API::access() {
             qDebug() << m_token.value();
         }
         reply->close();
-        // reply->deleteLater(); not sure
+        //reply->deleteLater();
     });
 
     QEventLoop loop;
@@ -78,7 +78,7 @@ bool Gazua::API::refresh() {
             qDebug() << m_token.value();
         }
         reply->close();
-        // reply->deleteLater(); not sure
+        //reply->deleteLater();
     });
     return true;
 }

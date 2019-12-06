@@ -21,6 +21,10 @@ QAbstractItemModel{parent}
     m_rootItem->child(static_cast<int>(Row::VOLUMES))->appendRow(new QStandardItem{"empty"});
 }
 
+UserInfo::~UserInfo() {
+    delete m_rootItem;
+}
+
 QModelIndex UserInfo::index(int row, int column, const QModelIndex &parent) const {
     auto parentItem = getItem(parent);
     auto childItem = parentItem->child(row, column);

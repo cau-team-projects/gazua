@@ -28,6 +28,7 @@ private:
 
     static constexpr int BALANCES = 0;
 public:
+    virtual ~UserInfo();
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     virtual QModelIndex parent(const QModelIndex &index) const override;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
