@@ -150,8 +150,22 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinInfo> coinInfo) {
         coinInfo->tickers(std::move(tickers));
         tickersReply->close();
     });
-    return true;
-/*
     auto constraintsReply = m_qnam.get(QNetworkRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}});
-*/
+    connect(constraintsReply, &QNetworkReply::finished, this, [constraintsReply, coinInfo] () {
+        const auto root = QJsonDocument::fromJson(constraintsReply->readAll()).object()["exchange"].toObject();
+        QMap<QString, Constraint> constraints;
+        for(const auto& coinName : root.keys()) {
+             constraints[coinName] = (struct Constraint) {
+                 .tick_size = root[coinName]["tick_size"].toDouble(),
+                 .min_price = root[coinName]["min_price"].toDouble(),
+                 .max_price = root[coinName]["max_price"].toDouble(),
+                 .order_min_price = root[coinName]["order_min_price"].toDouble(),
+                 .order_max_price = root[coinName]["order_max_price"].toDouble(),
+             };
+        }
+        coinInfo->constraints(std::move(constraints));
+        constraintsReply->close();
+    });
+
+    return true;
 }
