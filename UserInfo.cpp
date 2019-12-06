@@ -103,44 +103,59 @@ void UserInfo::timestamp(quint64 val) {
 }
 
 void UserInfo::balances(QMap<QString, Balance>&& balances) {
-    m_balances = std::move(balances);
+    balances = std::move(balances);
 
     auto balancesRow = m_rootItem->child(static_cast<int>(Row::BALANCES));
     if(balancesRow->rowCount() == 0) {
-        foreach(auto& key, m_balances.keys()) {
-
+        foreach(auto& key, balances.keys()) {
             auto balanceRow = new QStandardItem{};
             balanceRow->setText(key);
-            balanceRow->appendRow({new QStandardItem{"available"}, new QStandardItem{QString::number(m_balances[key].available)}});
-            balanceRow->appendRow({new QStandardItem{"trade_in_use"}, new QStandardItem{QString::number(m_balances[key].trade_in_use)}});
-            balanceRow->appendRow({new QStandardItem{"withdrawal_in_use"}, new QStandardItem{QString::number(m_balances[key].withdrawal_in_use)}});
-            balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(m_balances[key].avg_price)}});
-            balanceRow->appendRow({new QStandardItem{"avg_price_updated_at"}, new QStandardItem{QString::number(m_balances[key].avg_price_updated_at)}});
+            balanceRow->appendRow({new QStandardItem{"available"}, new QStandardItem{QString::number(balances[key].available)}});
+            balanceRow->appendRow({new QStandardItem{"trade_in_use"}, new QStandardItem{QString::number(balances[key].trade_in_use)}});
+            balanceRow->appendRow({new QStandardItem{"withdrawal_in_use"}, new QStandardItem{QString::number(balances[key].withdrawal_in_use)}});
+            balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(balances[key].avg_price)}});
+            balanceRow->appendRow({new QStandardItem{"avg_price_updated_at"}, new QStandardItem{QString::number(balances[key].avg_price_updated_at)}});
             balancesRow->appendRow(balanceRow);
 
         }
     } else {
         auto i = 0;
-        foreach(auto &key, m_balances.keys()) {
+        foreach(auto &key, balances.keys()) {
             auto balanceRow = balancesRow->child(i);
-            balanceRow->child(0, 1)->setText(QString::number(m_balances[key].available));
-            balanceRow->child(1, 1)->setText(QString::number(m_balances[key].trade_in_use));
-            balanceRow->child(2, 1)->setText(QString::number(m_balances[key].withdrawal_in_use));
-            balanceRow->child(3, 1)->setText(QString::number(m_balances[key].avg_price));
-            balanceRow->child(4, 1)->setText(QString::number(m_balances[key].avg_price_updated_at));
+            balanceRow->child(0, 1)->setText(QString::number(balances[key].available));
+            balanceRow->child(1, 1)->setText(QString::number(balances[key].trade_in_use));
+            balanceRow->child(2, 1)->setText(QString::number(balances[key].withdrawal_in_use));
+            balanceRow->child(3, 1)->setText(QString::number(balances[key].avg_price));
+            balanceRow->child(4, 1)->setText(QString::number(balances[key].avg_price_updated_at));
             ++i;
         }
     }
+    m_balances = std::move(balances);
     dataChanged(index(static_cast<int>(Row::BALANCES), 0), index(static_cast<int>(Row::BALANCES), 0));
 }
+
 void UserInfo::volumes(QMap<QString, Volume>&& volumes) {
+    auto volumesRow = m_rootItem->child(static_cast<int>(Row::VOLUMES));
+    if(volumesRow->rowCount() == 0) {
+        foreach(auto& key, volumes.keys()) {
+            auto volumeRow = new QStandardItem{};
+            volumeRow->setText(key);
+            volumeRow->appendRow({new QStandardItem{"volume"}, new QStandardItem{QString::number(volumes[key].volume)}});
+            volumeRow->appendRow({new QStandardItem{"maker_fee"}, new QStandardItem{QString::number(volumes[key].maker_fee)}});
+            volumeRow->appendRow({new QStandardItem{"taker_fee"}, new QStandardItem{QString::number(volumes[key].taker_fee)}});
+            volumesRow->appendRow(volumeRow);
+
+        }
+    } else {
+        auto i = 0;
+        foreach(auto &key, volumes.keys()) {
+            auto volumeRow = volumesRow->child(i);
+            volumeRow->child(0, 1)->setText(QString::number(volumes[key].volume));
+            volumeRow->child(1, 1)->setText(QString::number(volumes[key].maker_fee));
+            volumeRow->child(2, 1)->setText(QString::number(volumes[key].taker_fee));
+            ++i;
+        }
+    }
     m_volumes = std::move(volumes);
-}
-
-void UserInfo::balance(const QString& coinName, const Balance& balance) {
-    m_balances[coinName] = balance;
-}
-
-void UserInfo::volume(const QString& coinName, const Volume& volume) {
-    m_volumes[coinName] = volume;
+    dataChanged(index(static_cast<int>(Row::VOLUMES), 0), index(static_cast<int>(Row::VOLUMES), 0));
 }

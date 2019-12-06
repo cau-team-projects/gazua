@@ -45,8 +45,6 @@ public:
     void timestamp(quint64);
     void balances(QMap<QString, Balance>&& balances);
     void volumes(QMap<QString, Volume>&& volumes);
-    void balance(const QString&, const Balance&);
-    void volume(const QString&, const Volume&);
 };
 
 #endif

@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
     QTreeView view2;
     view2.setModel(coinTreeModel.get());
     view2.setWindowTitle(QObject::tr("CoinTree"));
+    view2.resize(500, 1000);
     //view2.setRootIndex(coinTreeModel->index(coinTreeModel->getRootItem()->childCount() - 1, 0, coinTreeModel->index(0, 0, QModelIndex())));
     view2.show();
 
@@ -67,9 +68,9 @@ int main(int argc, char *argv[])
         api.refreshCoinInfo(coinTreeModel);
         api.refreshUserInfo(userInfo);
         view.expandAll();
-        //view2.expandAll();
+        view2.expandAll();
     });
-    timer.start(4000);
+    timer.start(300);
 
     return app.exec();
 }
