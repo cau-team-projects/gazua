@@ -22,7 +22,10 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinTreeModel> coinInfoModel) {
     QNetworkRequest detailRequest{QUrl{"https://api.korbit.co.kr/v1/ticker/detailed/all"}};
     QNetworkReply *detailReply = m_qnam.get(detailRequest);
 
-    connect(detailReply, &QNetworkReply::finished, this, [this, detailReply, coinInfoModel, coinTreeRootItem, coinTreeRootIndex] () {
+    QNetworkRequest constraintRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}};
+    QNetworkReply *constraintReply = m_qnam.get(constraintRequest);
+
+    connect(detailReply, &QNetworkReply::finished, this, [this, detailReply, constraintReply, coinInfoModel, coinTreeRootItem, coinTreeRootIndex] () {
         QJsonObject detailObject = QJsonDocument::fromJson(detailReply->readAll()).object();
 
         coinTreeRootItem->insertChildren(coinTreeRootItem->childCount(), 1, 1);
@@ -38,8 +41,10 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinTreeModel> coinInfoModel) {
 
             for(const QString& fieldName : detailObject[coinName].toObject().keys()) {
                 coinTypeItem->insertChildren(coinTypeItem->childCount(), 1, 2);
-                coinInfoModel->setData(coinInfoModel->index(coinTypeItem->childCount() - 1, 0, coinTypeItemIndex), fieldName);
-                coinInfoModel->setData(coinInfoModel->index(coinTypeItem->childCount() - 1, 1, coinTypeItemIndex), detailObject.value(coinName).toObject().value(fieldName).toVariant());
+                QModelIndex coinFieldItemIndex = coinInfoModel->index(coinTypeItem->childCount() - 1, 0, coinTypeItemIndex);
+                QModelIndex coinValueItemIndex = coinInfoModel->index(coinTypeItem->childCount() - 1, 1, coinTypeItemIndex);
+                coinInfoModel->setData(coinFieldItemIndex, fieldName);
+                coinInfoModel->setData(coinValueItemIndex, detailObject.value(coinName).toObject().value(fieldName).toVariant());
             }
         }
         detailReply->close();
@@ -48,8 +53,6 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinTreeModel> coinInfoModel) {
         //qDebug() << coinTreeRootItem->child(coinTreeRootItem->childCount() - 1)->child(0)->child(0)->data(1) ;
         qDebug() << coinTreeRootItem->childCount();
 
-        QNetworkRequest constraintRequest{QUrl{"https://api.korbit.co.kr/v1/constants"}};
-        QNetworkReply *constraintReply = m_qnam.get(constraintRequest);
 
         connect(constraintReply, &QNetworkReply::finished, this, [constraintReply, coinInfoModel, timeItem, timeItemIndex] () {
             QJsonObject constraintObject = QJsonDocument::fromJson(constraintReply->readAll()).object()["exchange"].toObject();
@@ -61,8 +64,10 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinTreeModel> coinInfoModel) {
 
                 for(const QString& fieldName : constraintObject[coinName].toObject().keys()) {
                     coinTypeItem->insertChildren(coinTypeItem->childCount(), 1, 2);
-                    coinInfoModel->setData(coinInfoModel->index(coinTypeItem->childCount() - 1, 0, coinTypeItemIndex), fieldName);
-                    coinInfoModel->setData(coinInfoModel->index(coinTypeItem->childCount() - 1, 1, coinTypeItemIndex), constraintObject.value(coinName).toObject().value(fieldName).toVariant());
+                    QModelIndex coinFieldItemIndex = coinInfoModel->index(coinTypeItem->childCount() - 1, 0, coinTypeItemIndex);
+                    QModelIndex coinValueItemIndex = coinInfoModel->index(coinTypeItem->childCount() - 1, 1, coinTypeItemIndex);
+                    coinInfoModel->setData(coinFieldItemIndex, fieldName);
+                    coinInfoModel->setData(coinValueItemIndex, constraintObject.value(coinName).toObject().value(fieldName).toVariant());
                 }
                 constraint_coinNameIter++;
             }
