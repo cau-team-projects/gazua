@@ -54,7 +54,7 @@ bool Gazua::API::refreshCoinInfo(std::shared_ptr<CoinTreeModel> coinInfoModel) {
                 qDebug() << coinTreeRoot->childCount();
                 qDebug() << coinType->childCount();
                 for(const QString& fieldName : constraintObject[coinName].toObject().keys()) {
-                        qDebug() << coinName << fieldName << coinType->childCount();
+                    qDebug() << coinName << fieldName << coinType->childCount();
                     coinType->insertChildren(coinType->childCount(), 1, 2);
                     coinType->child(coinType->childCount() - 1)->setData(0, fieldName);
                     coinType->child(coinType->childCount() - 1)->setData(1, constraintObject.value(coinName).toObject().value(fieldName).toVariant());

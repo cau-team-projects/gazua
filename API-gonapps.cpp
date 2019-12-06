@@ -94,17 +94,15 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
     auto balancesReply = m_qnam.get(balancesReq);
     connect(balancesReply, &QNetworkReply::finished, this, [balancesReply, userInfo] () {
         const auto root = QJsonDocument::fromJson(balancesReply->readAll()).object();
+        QMap<QString, Balance> balances;
         for(const auto& coinName : root.keys()) {
-             userInfo->balance(
-                 coinName,
-                 (struct Balance) {
-                     .available = root[coinName]["available"].toString().toDouble(),
-                     .trade_in_use = root[coinName]["trade_in_use"].toString().toDouble(),
-                     .withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(),
-                     .avg_price = root[coinName]["avg_price"].toString().toDouble(),
-                     .avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble())
-                 }
-             );
+             balances[coinName] = (struct Balance) {
+                 .available = root[coinName]["available"].toString().toDouble(),
+                 .trade_in_use = root[coinName]["trade_in_use"].toString().toDouble(),
+                 .withdrawal_in_use = root[coinName]["withdrawal_in_use"].toString().toDouble(),
+                 .avg_price = root[coinName]["avg_price"].toString().toDouble(),
+                 .avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble())
+             };
 /*
              qDebug() << coinName << ">>>>>>>>>>>>>>>>";
              qDebug() << "available: " << balance.available;
@@ -114,6 +112,7 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
              qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
 */
         }
+        userInfo->balances(std::move(balances));
     });
     QNetworkRequest volumesReq{std::move(QUrl{"https://api.korbit.co.kr/v1/user/volume"})};
     volumesReq.setRawHeader(QString{"Authorization"}.toUtf8(), QString{"Bearer %1"}.arg(accessToken).toUtf8());
