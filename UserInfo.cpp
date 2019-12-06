@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QVariant>
+#include <QDateTime>
 #include "Balance.h"
 #include "UserInfo.h"
 #include "Volume.h"
@@ -14,11 +15,8 @@ QAbstractItemModel{parent}
     m_rootItem->appendRow(new QStandardItem{"total_volume"});
     m_rootItem->appendRow(new QStandardItem{"timestamp"});
     m_rootItem->appendRow(new QStandardItem{"volumes"});
-
-    m_rootItem->child(static_cast<int>(Row::BALANCES))->appendRow(new QStandardItem{"empty"});
     m_rootItem->child(static_cast<int>(Row::TOTAL_VOLUME))->appendRow(new QStandardItem{"empty"});
     m_rootItem->child(static_cast<int>(Row::TIMESTAMP))->appendRow(new QStandardItem{"empty"});
-    m_rootItem->child(static_cast<int>(Row::VOLUMES))->appendRow(new QStandardItem{"empty"});
 }
 
 UserInfo::~UserInfo() {
@@ -90,6 +88,7 @@ quint64 UserInfo::total_volume() {
 void UserInfo::total_volume(quint64 val) {
     m_total_volume = val;
     m_rootItem->child(static_cast<int>(Row::TOTAL_VOLUME))->child(0)->setText(std::move(QString::number(m_total_volume)));
+    dataChanged(index(static_cast<int>(Row::TOTAL_VOLUME), 0), index(static_cast<int>(Row::TOTAL_VOLUME), 0));
 }
 
 quint64 UserInfo::timestamp() {
@@ -99,24 +98,40 @@ quint64 UserInfo::timestamp() {
 void UserInfo::timestamp(quint64 val) {
     m_timestamp = val; 
     m_rootItem->child(static_cast<int>(Row::TIMESTAMP))->child(0)->setText(std::move(QString::number(m_timestamp)));
+    dataChanged(index(static_cast<int>(Row::TIMESTAMP), 0), index(static_cast<int>(Row::TIMESTAMP), 0));
+
 }
 
 void UserInfo::balances(QMap<QString, Balance>&& balances) {
-    beginResetModel();
     m_balances = std::move(balances);
+
     auto balancesRow = m_rootItem->child(static_cast<int>(Row::BALANCES));
-    balancesRow->removeRows(0, balancesRow->rowCount());
-    foreach(auto& key, m_balances.keys()) {
-        auto balanceRow = new QStandardItem{};
-        balanceRow->setText(key);
-        balanceRow->appendRow({new QStandardItem{"available"}, new QStandardItem{QString::number(m_balances[key].available)}});
-        balanceRow->appendRow({new QStandardItem{"trade_in_use"}, new QStandardItem{QString::number(m_balances[key].trade_in_use)}});
-        balanceRow->appendRow({new QStandardItem{"withdrawal_in_use"}, new QStandardItem{QString::number(m_balances[key].withdrawal_in_use)}});
-        balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(m_balances[key].avg_price)}});
-        balanceRow->appendRow({new QStandardItem{"avg_price_updated_at"}, new QStandardItem{QString::number(m_balances[key].avg_price_updated_at)}});
-        balancesRow->appendRow(balanceRow);
+    if(balancesRow->rowCount() == 0) {
+        foreach(auto& key, m_balances.keys()) {
+
+            auto balanceRow = new QStandardItem{};
+            balanceRow->setText(key);
+            balanceRow->appendRow({new QStandardItem{"available"}, new QStandardItem{QString::number(m_balances[key].available)}});
+            balanceRow->appendRow({new QStandardItem{"trade_in_use"}, new QStandardItem{QString::number(m_balances[key].trade_in_use)}});
+            balanceRow->appendRow({new QStandardItem{"withdrawal_in_use"}, new QStandardItem{QString::number(m_balances[key].withdrawal_in_use)}});
+            balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(m_balances[key].avg_price)}});
+            balanceRow->appendRow({new QStandardItem{"avg_price_updated_at"}, new QStandardItem{QString::number(m_balances[key].avg_price_updated_at)}});
+            balancesRow->appendRow(balanceRow);
+
+        }
+    } else {
+        auto i = 0;
+        foreach(auto &key, m_balances.keys()) {
+            auto balanceRow = balancesRow->child(i);
+            balanceRow->child(0, 1)->setText(QString::number(m_balances[key].available));
+            balanceRow->child(1, 1)->setText(QString::number(m_balances[key].trade_in_use));
+            balanceRow->child(2, 1)->setText(QString::number(m_balances[key].withdrawal_in_use));
+            balanceRow->child(3, 1)->setText(QString::number(m_balances[key].avg_price));
+            balanceRow->child(4, 1)->setText(QString::number(m_balances[key].avg_price_updated_at));
+            ++i;
+        }
     }
-    endResetModel();
+    dataChanged(index(static_cast<int>(Row::BALANCES), 0), index(static_cast<int>(Row::BALANCES), 0));
 }
 void UserInfo::volumes(QMap<QString, Volume>&& volumes) {
     m_volumes = std::move(volumes);

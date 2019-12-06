@@ -41,17 +41,19 @@ int main(int argc, char *argv[])
     QStringList coinInfoModelHeader;
     coinInfoModelHeader << "1" << "2" << "3";
     auto coinTreeModel = std::make_shared<Gazua::CoinTreeModel>(coinInfoModelHeader, QString(), nullptr);
-
+/*
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
     context->setContextProperty("userInfo", userInfo.get());
     context->setContextProperty("coinTreeModel", coinTreeModel.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+*/
 
     QTreeView view;
     view.setModel(userInfo.get());
     view.setWindowTitle(QObject::tr("UserInfo"));
     view.expandAll();
+    view.resize(500, 1000);
     view.show();
 
     QTreeView view2;

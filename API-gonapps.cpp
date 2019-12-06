@@ -103,14 +103,6 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
                  .avg_price = root[coinName]["avg_price"].toString().toDouble(),
                  .avg_price_updated_at = static_cast<quint64>(root[coinName]["avg_price_updated_at"].toDouble())
              };
-/*
-             qDebug() << coinName << ">>>>>>>>>>>>>>>>";
-             qDebug() << "available: " << balance.available;
-             qDebug() << "trade_in_use: " << balance.trade_in_use;
-             qDebug() << "withdrawal_in_use: " << balance.withdrawal_in_use;
-             qDebug() << "avg_price: " << balance.avg_price;
-             qDebug() << "avg_price_updated_at: " << balance.avg_price_updated_at;
-*/
         }
         userInfo->balances(std::move(balances));
     });
@@ -122,28 +114,16 @@ bool Gazua::API::refreshUserInfo(std::shared_ptr<UserInfo> userInfo) {
         const auto root = QJsonDocument::fromJson(std::move(data)).object();
         userInfo->total_volume(static_cast<quint64>(root["total_volume"].toDouble()));
         userInfo->timestamp(static_cast<quint64>(root["timestamp"].toDouble()));
-/*
-        qDebug() << "total_volume: " << userInfo->total_volume();
-        qDebug() << "timestamp: " << userInfo->timestamp();
-*/
+        QMap<QString, Volume> volumes;
 
         for(const auto& coinName : root.keys()) {
-            userInfo->volume(
-                coinName,
-                (struct Volume) {
-                    .volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong()),
-                    .maker_fee = root[coinName]["maker_fee"].toString().toDouble(),
-                    .taker_fee = root[coinName]["taker_fee"].toString().toDouble()
-                }
-            );
-/*
-            qDebug() << coinName << ">>>>>>>>>>>>>>>>";
-            qDebug() << "volume: " << volume.volume;
-            qDebug() << "maker_fee: " << volume.maker_fee;
-            qDebug() << "taker_fee: " << volume.taker_fee;
-*/
-
+            volumes[coinName] = (struct Volume) {
+                .volume = static_cast<quint64>(root[coinName]["volume"].toString().toULongLong()),
+                .maker_fee = root[coinName]["maker_fee"].toString().toDouble(),
+                .taker_fee = root[coinName]["taker_fee"].toString().toDouble()
+            };
         }
+        userInfo->volumes(std::move(volumes));
     });
     return true;
 }
