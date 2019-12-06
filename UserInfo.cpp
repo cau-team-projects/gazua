@@ -14,6 +14,7 @@ QAbstractItemModel{parent}
     m_rootItem->appendRow(new QStandardItem{"total_volume"});
     m_rootItem->appendRow(new QStandardItem{"timestamp"});
     m_rootItem->appendRow(new QStandardItem{"volumes"});
+
     m_rootItem->child(static_cast<int>(Row::BALANCES))->appendRow(new QStandardItem{"empty"});
     m_rootItem->child(static_cast<int>(Row::TOTAL_VOLUME))->appendRow(new QStandardItem{"empty"});
     m_rootItem->child(static_cast<int>(Row::TIMESTAMP))->appendRow(new QStandardItem{"empty"});
@@ -24,7 +25,7 @@ QModelIndex UserInfo::index(int row, int column, const QModelIndex &parent) cons
     if(parent.isValid() && parent.column() != 0)
         return QModelIndex{};
     auto parentItem = getItem(parent);
-    auto childItem = parentItem->child(row, 0);
+    auto childItem = parentItem->child(row, column);
     if(childItem)
         return createIndex(row, column, childItem);
     else
@@ -54,7 +55,7 @@ QVariant UserInfo::data(const QModelIndex &index, int role) const {
         return QVariant{};
     if(role != Qt::DisplayRole)
         return QVariant{};
-    return getItem(index)->data(index.column());
+    return getItem(index)->data(Qt::DisplayRole);
 }
 
 Qt::ItemFlags UserInfo::flags(const QModelIndex &index) const {
@@ -99,6 +100,7 @@ void UserInfo::timestamp(quint64 val) {
 }
 
 void UserInfo::balances(QMap<QString, Balance>&& balances) {
+    beginResetModel();
     m_balances = std::move(balances);
     auto balancesRow = m_rootItem->child(static_cast<int>(Row::BALANCES));
     balancesRow->removeRows(0, balancesRow->rowCount());
@@ -110,9 +112,9 @@ void UserInfo::balances(QMap<QString, Balance>&& balances) {
         balanceRow->appendRow({new QStandardItem{"withdrawal_in_use"}, new QStandardItem{QString::number(m_balances[key].withdrawal_in_use)}});
         balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(m_balances[key].avg_price)}});
         balanceRow->appendRow({new QStandardItem{"avg_price_updated_at"}, new QStandardItem{QString::number(m_balances[key].avg_price_updated_at)}});
-        qDebug() << balanceRow->rowCount() << balanceRow->columnCount();
         balancesRow->appendRow(balanceRow);
     }
+    endResetModel();
 }
 void UserInfo::volumes(QMap<QString, Volume>&& volumes) {
     m_volumes = std::move(volumes);
