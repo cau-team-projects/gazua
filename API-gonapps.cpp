@@ -32,7 +32,7 @@ bool Gazua::API::access() {
         }
         if(root["access_token"].isUndefined()) {
             m_token = std::nullopt;
-            qDebug() << "Failed to fetch token";
+            qDebug() << "Failed to fetch access token";
         } else {
             const auto expiration = root["expires_in"].toInt();
             const auto accessToken = root["access_token"].toString();
@@ -62,13 +62,14 @@ bool Gazua::API::refresh() {
     req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     auto reply = m_qnam.post(req, query.query().toUtf8());
     connect(reply, &QNetworkReply::finished, this, [this, reply] () {
-        const auto root = QJsonDocument::fromJson(reply->readAll()).object();
+        const auto data = reply->readAll();
+        const auto root = QJsonDocument::fromJson(std::move(data)).object();
         const auto tokenType = root["token_type"].toString() == "Bearer" ? TokenType::BEARER : TokenType::UNKNOWN;
         const auto scopeStringList = root["scope"].toString().split(',', QString::SkipEmptyParts);
         uint32_t scope = 0;
         if(root["access_token"].isUndefined()) {
             m_token = std::nullopt;
-            qDebug() << "Failed to fetch token";
+            //qDebug() << "Failed to fetch access token using refresh token";
         } else {
             const auto expiration = root["expires_in"].toInt();
             const auto accessToken = root["access_token"].toString();

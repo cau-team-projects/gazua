@@ -67,6 +67,11 @@ int main(int argc, char *argv[])
         view2.expandAll();
     });
     timer.start(300);
+    QTimer refreshTokenTimer{};
+    api.connect(&refreshTokenTimer, &QTimer::timeout, &api, [&api] () {
+        api.refresh();
+    });
+    refreshTokenTimer.start(1800000);
 
     return app.exec();
 }
