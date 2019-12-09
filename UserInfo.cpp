@@ -110,10 +110,10 @@ void UserInfo::balances(QMap<QString, Balance>&& balances) {
         foreach(auto& key, balances.keys()) {
             auto balanceRow = new QStandardItem{};
             balanceRow->setText(key);
-            balanceRow->appendRow({new QStandardItem{"available"}, new QStandardItem{QString::number(balances[key].available)}});
-            balanceRow->appendRow({new QStandardItem{"trade_in_use"}, new QStandardItem{QString::number(balances[key].trade_in_use)}});
-            balanceRow->appendRow({new QStandardItem{"withdrawal_in_use"}, new QStandardItem{QString::number(balances[key].withdrawal_in_use)}});
-            balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(balances[key].avg_price)}});
+            balanceRow->appendRow({new QStandardItem{"available"}, new QStandardItem{QString::number(balances[key].available, 'f')}});
+            balanceRow->appendRow({new QStandardItem{"trade_in_use"}, new QStandardItem{QString::number(balances[key].trade_in_use, 'f')}});
+            balanceRow->appendRow({new QStandardItem{"withdrawal_in_use"}, new QStandardItem{QString::number(balances[key].withdrawal_in_use, 'f')}});
+            balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(balances[key].avg_price, 'f')}});
             balanceRow->appendRow({new QStandardItem{"avg_price_updated_at"}, new QStandardItem{QString::number(balances[key].avg_price_updated_at)}});
             balancesRow->appendRow(balanceRow);
 
@@ -122,10 +122,10 @@ void UserInfo::balances(QMap<QString, Balance>&& balances) {
         auto i = 0;
         foreach(auto &key, balances.keys()) {
             auto balanceRow = balancesRow->child(i);
-            balanceRow->child(0, 1)->setText(QString::number(balances[key].available));
-            balanceRow->child(1, 1)->setText(QString::number(balances[key].trade_in_use));
-            balanceRow->child(2, 1)->setText(QString::number(balances[key].withdrawal_in_use));
-            balanceRow->child(3, 1)->setText(QString::number(balances[key].avg_price));
+            balanceRow->child(0, 1)->setText(QString::number(balances[key].available, 'f'));
+            balanceRow->child(1, 1)->setText(QString::number(balances[key].trade_in_use, 'f'));
+            balanceRow->child(2, 1)->setText(QString::number(balances[key].withdrawal_in_use, 'f'));
+            balanceRow->child(3, 1)->setText(QString::number(balances[key].avg_price, 'f'));
             balanceRow->child(4, 1)->setText(QString::number(balances[key].avg_price_updated_at));
             ++i;
         }
@@ -141,8 +141,8 @@ void UserInfo::volumes(QMap<QString, Volume>&& volumes) {
             auto volumeRow = new QStandardItem{};
             volumeRow->setText(key);
             volumeRow->appendRow({new QStandardItem{"volume"}, new QStandardItem{QString::number(volumes[key].volume)}});
-            volumeRow->appendRow({new QStandardItem{"maker_fee"}, new QStandardItem{QString::number(volumes[key].maker_fee)}});
-            volumeRow->appendRow({new QStandardItem{"taker_fee"}, new QStandardItem{QString::number(volumes[key].taker_fee)}});
+            volumeRow->appendRow({new QStandardItem{"maker_fee"}, new QStandardItem{QString::number(volumes[key].maker_fee, 'f')}});
+            volumeRow->appendRow({new QStandardItem{"taker_fee"}, new QStandardItem{QString::number(volumes[key].taker_fee, 'f')}});
             volumesRow->appendRow(volumeRow);
 
         }
@@ -151,8 +151,8 @@ void UserInfo::volumes(QMap<QString, Volume>&& volumes) {
         foreach(auto &key, volumes.keys()) {
             auto volumeRow = volumesRow->child(i);
             volumeRow->child(0, 1)->setText(QString::number(volumes[key].volume));
-            volumeRow->child(1, 1)->setText(QString::number(volumes[key].maker_fee));
-            volumeRow->child(2, 1)->setText(QString::number(volumes[key].taker_fee));
+            volumeRow->child(1, 1)->setText(QString::number(volumes[key].maker_fee, 'f'));
+            volumeRow->child(2, 1)->setText(QString::number(volumes[key].taker_fee, 'f'));
             ++i;
         }
     }
