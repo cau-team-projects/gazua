@@ -37,14 +37,14 @@ int main(int argc, char *argv[])
     auto userInfo = std::make_shared<Gazua::UserInfo>();
 
     auto coinInfo = std::make_shared<Gazua::CoinInfo>();
-/*
+
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
     context->setContextProperty("userInfo", userInfo.get());
     context->setContextProperty("coinInfo", coinInfo.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-*/
 
+/*
     QTreeView view;
     view.setModel(userInfo.get());
     view.setWindowTitle(QObject::tr("UserInfo"));
@@ -56,15 +56,15 @@ int main(int argc, char *argv[])
     view2.setModel(coinInfo.get());
     view2.setWindowTitle(QObject::tr("CoinInfo"));
     view2.resize(500, 1000);
-    //view2.setRootIndex(coinInfo->index(coinInfo->getRootItem()->childCount() - 1, 0, coinInfo->index(0, 0, QModelIndex())));
     view2.show();
+*/
 
     QTimer timer{};
-    api.connect(&timer, &QTimer::timeout, &api, [&api, coinInfo, userInfo, &view, &view2] () {
+    api.connect(&timer, &QTimer::timeout, &api, [&api, coinInfo, userInfo/*, &view, &view2*/] () {
         api.refreshCoinInfo(coinInfo);
         api.refreshUserInfo(userInfo);
-        view.expandAll();
-        view2.expandAll();
+        //view.expandAll();
+        //view2.expandAll();
     });
     timer.start(300);
     QTimer refreshTokenTimer{};

@@ -116,7 +116,6 @@ void UserInfo::balances(QMap<QString, Balance>&& balances) {
             balanceRow->appendRow({new QStandardItem{"avg_price"}, new QStandardItem{QString::number(balances[key].avg_price, 'f')}});
             balanceRow->appendRow({new QStandardItem{"avg_price_updated_at"}, new QStandardItem{QString::number(balances[key].avg_price_updated_at)}});
             balancesRow->appendRow(balanceRow);
-
         }
     } else {
         auto i = 0;

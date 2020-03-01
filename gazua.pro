@@ -2,6 +2,9 @@ QT += quick network widgets
 
 CONFIG += c++17
 
+QMAKE_CXXFLAGS_DEBUG *= -pg
+QMAKE_LFLAGS_DEBUG *= -pg
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Refer to the documentation for the
@@ -45,11 +48,3 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-DISTFILES += \
-    gui-kms/ImageCube.qml \
-    gui-kms/InfoSheet.qml \
-    gui-kms/Navibutton.qml \
-    gui-kms/SwipeArea.qml \
-    gui-kms/gui.qml \
-    gui-kms/oneqt.qml
